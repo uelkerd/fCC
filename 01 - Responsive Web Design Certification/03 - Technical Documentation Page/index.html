@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Fundamentals - Technical Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav id="navbar">
+    <header>JavaScript Fundamentals</header>
+    <a href="#Introduction" class="nav-link">Introduction</a>
+    <a href="#Getting_Started" class="nav-link">Getting Started</a>
+    <a href="#Variables_and_Data_Types" class="nav-link">Variables and Data Types</a>
+    <a href="#Functions" class="nav-link">Functions</a>
+    <a href="#Control_Flow" class="nav-link">Control Flow</a>
+    <a href="#Arrays_and_Objects" class="nav-link">Arrays and Objects</a>
+    <a href="#DOM_Manipulation" class="nav-link">DOM Manipulation</a>
+  </nav>
+
+  <main id="main-doc">
+    <section class="main-section" id="Introduction">
+      <header>Introduction</header>
+      <p>JavaScript is a lightweight, interpreted, or just-in-time compiled programming language with first-class functions.</p>
+      <p>While it is most well-known as the scripting language for Web pages, many non-browser environments also use it, such as Node.js, Apache CouchDB and Adobe Acrobat.</p>
+      <p>JavaScript is a prototype-based, multi-paradigm, single-threaded, dynamic language, supporting object-oriented, imperative, and declarative (e.g. functional programming) styles.</p>
+      <p>This documentation aims to provide a comprehensive guide to JavaScript fundamentals for beginners and experienced programmers alike.</p>
+      <ul>
+        <li>Created in 1995 by Brendan Eich</li>
+        <li>Became an ECMA standard in 1997</li>
+        <li>Not related to Java despite the similar name</li>
+      </ul>
+    </section>
+
+    <section class="main-section" id="Getting_Started">
+      <header>Getting Started</header>
+      <p>To get started with JavaScript, you don't need any special tools - just a modern web browser and a text editor.</p>
+      <p>You can write JavaScript directly in your HTML file using script tags:</p>
+      <code>
+        &lt;script&gt;
+          console.log("Hello, World!");
+        &lt;/script&gt;
+      </code>
+      <p>Or you can link to an external JavaScript file:</p>
+      <code>
+        &lt;script src="script.js"&gt;&lt;/script&gt;
+      </code>
+      <p>It's generally considered best practice to place your scripts at the end of the body element to ensure the HTML has been fully loaded before executing JavaScript.</p>
+    </section>
+
+    <section class="main-section" id="Variables_and_Data_Types">
+      <header>Variables and Data Types</header>
+      <p>JavaScript has three keywords for declaring variables: var, let, and const.</p>
+      <p>The let and const keywords were introduced in ES6 (2015) and are now preferred over var.</p>
+      <code>
+        // Variable declarations
+        let name = "John";
+        const age = 30;
+        var isStudent = true;
+      </code>
+      <p>JavaScript has several data types:</p>
+      <ul>
+        <li>String: For text values</li>
+        <li>Number: For numeric values</li>
+        <li>Boolean: true or false</li>
+        <li>Object: Collections of properties</li>
+        <li>Array: Ordered collections</li>
+      </ul>
+      <p>You can use the typeof operator to check the type of a variable:</p>
+      <code>
+        console.log(typeof "Hello"); // "string"
+        console.log(typeof 42); // "number"
+        console.log(typeof true); // "boolean"
+      </code>
+    </section>
+
+    <section class="main-section" id="Functions">
+      <header>Functions</header>
+      <p>Functions are one of the fundamental building blocks in JavaScript. A function is a JavaScript procedure—a set of statements that performs a task or calculates a value.</p>
+      <p>There are several ways to define functions in JavaScript:</p>
+      <code>
+        // Function declaration
+        function greet(name) {
+          return "Hello, " + name + "!";
+        }
+
+        // Function expression
+        const sayHello = function(name) {
+          return "Hello, " + name + "!";
+        };
+
+        // Arrow function (ES6)
+        const welcome = (name) => {
+          return "Welcome, " + name + "!";
+        };
+      </code>
+      <p>Functions can be called with arguments that get passed to the parameters:</p>
+      <p>JavaScript also supports default parameters, rest parameters, and other advanced features.</p>
+      <ul>
+        <li>Functions are first-class objects in JavaScript</li>
+        <li>They can be passed as arguments to other functions</li>
+        <li>They can be returned from functions</li>
+        <li>They can have properties and methods</li>
+      </ul>
+    </section>
+
+    <section class="main-section" id="Control_Flow">
+      <header>Control Flow</header>
+      <p>Control flow statements allow you to control the execution flow of your program based on certain conditions.</p>
+      <p>The if statement executes a block of code if a specified condition is true:</p>
+      <code>
+        if (condition) {
+          // code to be executed if condition is true
+        } else {
+          // code to be executed if condition is false
+        }
+      </code>
+      <p>The switch statement is used to perform different actions based on different conditions:</p>
+      <code>
+        switch(expression) {
+          case x:
+            // code block
+            break;
+          case y:
+            // code block
+            break;
+          default:
+            // code block
+        }
+      </code>
+      <p>Loops are used to execute a block of code multiple times:</p>
+      <ul>
+        <li>for loop: repeats until a specified condition evaluates to false</li>
+        <li>while loop: executes as long as a specified condition is true</li>
+        <li>do...while loop: executes at least once, then repeats as long as a condition is true</li>
+      </ul>
+    </section>
+
+    <section class="main-section" id="Arrays_and_Objects">
+      <header>Arrays and Objects</header>
+      <p>Arrays are ordered collections of values that can be of any type.</p>
+      <p>You can create arrays using array literals or the Array constructor:</p>
+      <code>
+        // Array literal
+        const fruits = ["Apple", "Banana", "Cherry"];
+        
+        // Array constructor
+        const cars = new Array("Volvo", "BMW", "Ford");
+      </code>
+      <p>Objects are collections of key-value pairs. They can be created using object literals or the Object constructor:</p>
+      <code>
+        // Object literal
+        const person = {
+          firstName: "John",
+          lastName: "Doe",
+          age: 30,
+          greet: function() {
+            return "Hello, " + this.firstName;
+          }
+        };
+      </code>
+      <p>Arrays and objects have many built-in methods to manipulate and access data.</p>
+      <ul>
+        <li>Array methods: push(), pop(), shift(), unshift(), splice(), slice()</li>
+        <li>Object methods: Object.keys(), Object.values(), Object.entries()</li>
+      </ul>
+    </section>
+
+    <section class="main-section" id="DOM_Manipulation">
+      <header>DOM Manipulation</header>
+      <p>The Document Object Model (DOM) is a programming interface for HTML and XML documents.</p>
+      <p>JavaScript can be used to access and manipulate the DOM:</p>
+      <code>
+        // Selecting elements
+        const element = document.getElementById("myId");
+        const elements = document.getElementsByClassName("myClass");
+        const elementsByTag = document.getElementsByTagName("div");
+        const querySelector = document.querySelector(".myClass");
+      </code>
+      <p>You can modify elements using various properties and methods:</p>
+      <code>
+        // Changing content
+        element.textContent = "New text";
+        element.innerHTML = "<strong>Bold text</strong>";
+        
+        // Changing attributes
+        element.setAttribute("class", "newClass");
+        element.style.color = "red";
+      </code>
+      <p>Event listeners allow you to execute code when specific events occur:</p>
+      <p>The DOM is a powerful interface that allows JavaScript to interact with HTML elements and create dynamic web pages.</p>
+      <ul>
+        <li>Events include: click, mouseover, keydown, submit, load</li>
+        <li>Elements can be created, modified, and removed</li>
+        <li>DOM manipulation is key to creating interactive web applications</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
