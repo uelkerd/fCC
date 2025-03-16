@@ -1,0 +1,157 @@
+:root {
+    --color-primary: #3a86ff;
+    --color-secondary: #8338ec;
+    --color-text: #333;
+    --color-background: #f5f5f5;
+    --color-form-background: #ffffff;
+    --border-radius: 5px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+#description {
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+#survey-form {
+    background-color: var(--color-form-background);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+}
+
+.hint {
+    font-size: 0.9rem;
+    color: #777;
+    font-weight: normal;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+.form-group p {
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.form-group label:not(:first-of-type) {
+    font-weight: normal;
+    margin-top: 0.5rem;
+}
+
+/* Radio and checkbox labels */
+input[type="radio"] + span,
+input[type="checkbox"] + span {
+    margin-left: 0.5rem;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button#submit {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button#submit:hover {
+    background-color: var(--color-secondary);
+}
+
+/* Style for radio and checkbox containers */
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+label:has(> input[type="radio"]),
+label:has(> input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    font-weight: normal;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    #survey-form {
+        padding: 1.5rem;
+    }
+}
