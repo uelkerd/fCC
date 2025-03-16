@@ -1,10 +1,10 @@
-# FreeCodeCamp Projects
+# freeCodeCamp Projects
 
-This repository contains my solutions and projects completed as part of the [FreeCodeCamp](https://www.freecodecamp.org/) curriculum.
+This repository contains my solutions and projects completed as part of the [freeCodeCamp](https://www.freecodecamp.org/) curriculum.
 
-## About FreeCodeCamp
+## About freeCodeCamp
 
-FreeCodeCamp is a non-profit organization that consists of an interactive learning web platform, an online community forum, chat rooms, online publications and local organizations that intend to make learning web development accessible to anyone.
+freeCodeCamp is a non-profit organization that consists of an interactive learning web platform, an online community forum, chat rooms, online publications and local organizations that intend to make learning web development accessible to anyone.
 
 ## Repository Structure
 
@@ -58,7 +58,7 @@ This repository is organized by certification tracks:
 
 ## How to Navigate This Repository
 
-Each folder represents a different certification or module from FreeCodeCamp. Within each folder, you'll find individual projects and challenges I've completed.
+Each folder represents a different certification or module from freeCodeCamp. Within each folder, you'll find individual projects and challenges I've completed.
 
 ## Connect With Me
 
@@ -67,5 +67,5 @@ Each folder represents a different certification or module from FreeCodeCamp. Wi
 
 ---
 
-*This repository is continuously updated as I progress through the FreeCodeCamp curriculum.*)
+*This repository is continuously updated as I progress through the freeCodeCamp curriculum.*)
 ---
