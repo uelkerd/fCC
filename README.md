@@ -43,7 +43,7 @@ This repository is organized by certification tracks:
 
 | Certification | Status |
 |---------------|--------|
-| Responsive Web Design | Finished |
+| Responsive Web Design | [Finished](https://www.freecodecamp.org/certification/uelkerd/responsive-web-design) |
 | JavaScript Algorithms and Data Structures | Not Started |
 | Front End Development Libraries | Not Started |
 | Data Visualization | Not Started |
@@ -63,13 +63,9 @@ Each folder represents a different certification or module from FreeCodeCamp. Wi
 ## Connect With Me
 
 - GitHub: [0x-duelker](https://github.com/0x-duelker)
-- FreeCodeCamp: [uelkerd@fCC]([https://www.freecodecamp.org/uelkerd])
+- FreeCodeCamp: [uelkerd@fCC](https://www.freecodecamp.org/uelkerd)
 
 ---
 
 *This repository is continuously updated as I progress through the FreeCodeCamp curriculum.*)
-- FreeCodeCamp: [Your FCC Profile](https://www.freecodecamp.org/YourUsername)
-
 ---
-
-*This repository is continuously updated as I progress through the FreeCodeCamp curriculum.*
