@@ -1,7 +1,22 @@
 # <a href='https://www.freecodecamp.org'><img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="200"></a> Projects
 
+> **[View My Live Portfolio](https://uelkerd.github.io/fCC/)** - Browse all my freeCodeCamp projects in an interactive showcase!
 
-This repository contains my solutions and projects completed as part of the <a href='https://www.freecodecamp.org'><img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="100"></a> curriculum.
+![Portfolio Screenshot](screenshots/portfolio-screenshot.png)
+
+## 📱 Interactive Portfolio Site
+
+This repository not only contains the code for my <a href='https://www.freecodecamp.org'><img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="100"></a> projects but also features a **fully interactive portfolio website** where you can:
+
+- Explore all my projects in one place
+- Navigate through different certification tracks
+- View live demos of completed projects
+- Track my progress through the freeCodeCamp curriculum
+
+The site is built with modern HTML, CSS, and JavaScript and is automatically deployed through GitHub Pages.
+
+---
+
 
 ## About freeCodeCamp
 
