@@ -2,7 +2,7 @@
 
 > **[View My Live Portfolio](https://uelkerd.github.io/fCC/)** - Browse all my freeCodeCamp projects in an interactive showcase!
 
-![Portfolio Screenshot](Preview.png)
+[![Portfolio Screenshot](Preview.png)](https://uelkerd.github.io/fCC)
 
 ## 📱 Interactive Portfolio Site
 
