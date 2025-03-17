@@ -1,0 +1,38 @@
+name: Update freeCodeCamp Activity Data
+
+on:
+  schedule:
+    # Run daily at midnight (UTC)
+    - cron: '0 0 * * *'
+  # Allow manual triggering of the workflow
+  workflow_dispatch:
+
+jobs:
+  update-activity:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: |
+          npm install puppeteer
+          
+      - name: Scrape freeCodeCamp activity
+        run: node scrape-activity.js
+        env:
+          FCC_USERNAME: ${{ secrets.FCC_USERNAME }}
+          
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add activity-data.json
+          git commit -m "Update freeCodeCamp activity data" || echo "No changes to commit"
+          git push
