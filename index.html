@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My <img src='https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg' alt='freeCodeCamp'> Journey</title>
+        <title>My <img src='https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg' alt='freeCodeCamp'> Journey</title>
+    <!-- Add the JavaScript file first so it removes no-js class early -->
+    <script src="index.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,9 +28,11 @@
         <section class="certifications">
             <h2>Certifications & Projects</h2>
             
-            <div class="cert-card">
-                <input type="checkbox" id="cert-01" class="cert-check" checked>
-                <label for="cert-01" class="cert-title">01 - Responsive Web Design</label>
+            <!-- Card 1: Initially expanded -->
+            <div id="cert-01" class="cert-card expanded">
+                <h3 class="cert-title">
+                    <a href="#cert-01" class="title-link">01 - Responsive Web Design</a>
+                </h3>
                 <div class="cert-content">
                     <div class="projects">
                         <a href="01 - Responsive Web Design Certification/01 - Survey Form/" class="project">
@@ -65,33 +69,41 @@
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-02" class="cert-check">
-                <label for="cert-02" class="cert-title">02 - JavaScript Algorithms and Data Structures</label>
+            <!-- Card 2: Initially collapsed -->
+            <div id="cert-02" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-02" class="title-link">02 - JavaScript Algorithms and Data Structures</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-03" class="cert-check">
-                <label for="cert-03" class="cert-title">03 - Front End Development Libraries</label>
+            <!-- Card 3 -->
+            <div id="cert-03" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-03" class="title-link">03 - Front End Development Libraries</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-04" class="cert-check">
-                <label for="cert-04" class="cert-title">04 - Data Visualization</label>
+            <!-- Card 4 -->
+            <div id="cert-04" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-04" class="title-link">04 - Data Visualization</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-05" class="cert-check">
-                <label for="cert-05" class="cert-title">05 - Relational Database</label>
+            <!-- Card 5 -->
+            <div id="cert-05" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-05" class="title-link">05 - Relational Database</a>
+                </h3>
                 <div class="cert-content">
                     <div class="projects">
                         <a href="05 - Relational Database Certification/universe.sql" class="project">
@@ -104,57 +116,71 @@
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-06" class="cert-check">
-                <label for="cert-06" class="cert-title">06 - Back End Development and APIs</label>
+            <!-- Card 6 -->
+            <div id="cert-06" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-06" class="title-link">06 - Back End Development and APIs</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-07" class="cert-check">
-                <label for="cert-07" class="cert-title">07 - Quality Assurance</label>
+            <!-- Card 7 -->
+            <div id="cert-07" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-07" class="title-link">07 - Quality Assurance</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-08" class="cert-check">
-                <label for="cert-08" class="cert-title">08 - Scientific Computing with Python</label>
+            <!-- Card 8 -->
+            <div id="cert-08" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-08" class="title-link">08 - Scientific Computing with Python</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-09" class="cert-check">
-                <label for="cert-09" class="cert-title">09 - Data Analysis with Python</label>
+            <!-- Card 9 -->
+            <div id="cert-09" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-09" class="title-link">09 - Data Analysis with Python</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-10" class="cert-check">
-                <label for="cert-10" class="cert-title">10 - Information Security</label>
+            <!-- Card 10 -->
+            <div id="cert-10" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-10" class="title-link">10 - Information Security</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-11" class="cert-check">
-                <label for="cert-11" class="cert-title">11 - Machine Learning with Python</label>
+            <!-- Card 11 -->
+            <div id="cert-11" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-11" class="title-link">11 - Machine Learning with Python</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
             </div>
 
-            <div class="cert-card">
-                <input type="checkbox" id="cert-12" class="cert-check">
-                <label for="cert-12" class="cert-title">12 - College Algebra with Python</label>
+            <!-- Card 12 -->
+            <div id="cert-12" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-12" class="title-link">12 - College Algebra with Python</a>
+                </h3>
                 <div class="cert-content">
                     <p class="coming-soon">Projects coming soon...</p>
                 </div>
