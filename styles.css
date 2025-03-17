@@ -15,33 +15,6 @@
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     --hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-}
-
-.username-link {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    transition: color 0.3s ease;
-}
-
-.username-link:hover {
-    color: #4d5bce;
-}
-
-.portfolio-text {
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
 
 * {
     margin: 0;
@@ -49,6 +22,133 @@ header h1 {
     box-sizing: border-box;
 }
 
+/* Navbar Styles - Fixed to top of viewport */
+#navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#navbar ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 15px 0;
+}
+
+#navbar ul li {
+    margin: 0 15px;
+}
+
+#navbar ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+#navbar ul li a:hover {
+    color: var(--accent-color);
+}
+
+/* Welcome Section - Full viewport height */
+#welcome-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    margin-top: 60px; /* Account for fixed navbar */
+}
+
+#welcome-section h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+#welcome-section p {
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+/* Projects Section Styles */
+#projects {
+    padding: 50px 0;
+    background-color: #f4f4f4;
+}
+
+#projects h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.projects-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.project-tile {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eaedf1;
+    border-radius: 10px;
+    overflow: hidden;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+}
+
+.project-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.project-tile .project-name {
+    background-color: #f8fafc;
+    padding: 12px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+}
+
+.project-tile .project-preview {
+    height: 160px;
+    background-color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 0.95rem;
+    padding: 10px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.project-tile .project-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Remaining original styles from the previous CSS */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
@@ -82,6 +182,27 @@ header h1 {
 header img {
     vertical-align: middle;
     margin: 0 5px;
+}
+
+.username-link {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    transition: color 0.3s ease;
+}
+
+.username-link:hover {
+    color: #4d5bce;
+}
+
+.portfolio-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
@@ -221,7 +342,7 @@ main {
     opacity: 1;
 }
 
-/* Project grid layout */
+/* Existing .projects class for certification projects */
 .projects {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -302,87 +423,65 @@ footer a:hover {
     text-decoration: underline;
     color: #6d8eff;
 }
-/* Activity Heatmap styles */
-.activity-card {
-    background-color: var(--primary-color);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 30px;
-    color: var(--text-color);
-    box-shadow: var(--card-shadow);
-}
 
-.activity-card h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+/* Add GitHub profile link styles */
+#profile-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--accent-color);
     font-weight: 600;
+    transition: color 0.3s ease;
 }
 
-.activity-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+#profile-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
 }
 
-#activity-heatmap {
-    width: 100%;
-    overflow-x: auto;
-    margin-bottom: 10px;
-}
+/* Activity Heatmap styles and other existing styles remain the same */
 
-.activity-date-range {
-    text-align: center;
-    font-size: 0.9rem;
-    color: #8b949e;
-    margin-top: 8px;
-}
-
-/* Calendar heatmap specific styles */
-.ch-month {
-    fill: #8b949e;
-    font-size: 10px;
-}
-
-.ch-day {
-    shape-rendering: geometricPrecision;
-    outline: 1px solid rgba(27, 31, 35, 0.06);
-    outline-offset: -1px;
-    rx: 2px;
-    ry: 2px;
-}
-
-.ch-tooltip {
-    background-color: #24292e;
-    border-radius: 3px;
-    color: #ffffff;
-    padding: 5px 10px;
-    font-size: 12px;
-}
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    header h1 {
-        font-size: 2rem;
+    #welcome-section h1 {
+        font-size: 2.5rem;
     }
-    
-    .projects {
+
+    #welcome-section p {
+        font-size: 1.2rem;
+    }
+
+    #projects h2 {
+        font-size: 1.8rem;
+    }
+
+    .projects-container {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
-    
-    .intro h2 {
-        font-size: 1.8rem;
+
+    header h1 {
+        font-size: 2rem;
     }
 }
 
 @media (max-width: 480px) {
+    #welcome-section h1 {
+        font-size: 2rem;
+    }
+
+    #welcome-section p {
+        font-size: 1rem;
+    }
+
+    .projects-container {
+        grid-template-columns: 1fr;
+    }
+
     header {
         padding: 40px 0 30px;
     }
-    
-    .projects {
-        grid-template-columns: 1fr;
-    }
 }
+
+/* Existing activity heatmap and other styles continue... */
 
 /* freeCodeCamp Activity Heatmap Styles */
 .activity-card {
@@ -479,6 +578,8 @@ footer a:hover {
 .heatmap-cell[data-level="2"] { background-color: #006d32; }
 .heatmap-cell[data-level="3"] { background-color: #26a641; }
 .heatmap-cell[data-level="4"] { background-color: #39d353; }
+
+/* Existing styles, with additions to meet fCC requirements */
 
 /* Navbar Styles - Fixed to top of viewport */
 #navbar {
