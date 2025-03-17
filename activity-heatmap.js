@@ -38,7 +38,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Default date range to current period
     if (HEATMAP_CONFIG.dateRangeElement) {
-      HEATMAP_CONFIG.dateRangeElement.textContent = 'No activity yet';
+      const currentDate = new Date();
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(currentDate.getMonth() - 5);
+      sixMonthsAgo.setDate(1);
+      
+      HEATMAP_CONFIG.dateRangeElement.textContent = 
+        `${sixMonthsAgo.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - ${currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
     }
   }
 
@@ -58,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (response.ok) {
           const data = await response.json();
           
-          // STRICT: Only return data with actual activity
+          // Strict filtering for actual activity
           const validData = data.filter(entry => entry.count > 0);
           return validData;
         }
@@ -67,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    return []; // Explicitly return empty array
+    return []; // Explicit empty array
   }
 
   /**
