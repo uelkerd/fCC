@@ -62,7 +62,7 @@ Each folder represents a different certification or module from freeCodeCamp. Wi
 
 ## Connect With Me
 
-- GitHub: [0x-duelker](https://github.com/0x-duelker)
+- GitHub: [uelkerd](https://github.com/uelkerd)
 - FreeCodeCamp: [uelkerd@fCC](https://www.freecodecamp.org/uelkerd)
 
 ---
