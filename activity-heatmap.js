@@ -141,7 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
     for (const path of fetchPaths) {
       try {
         debugLog(`Trying path: ${path}`);
-        const response = await fetch(path);
+        debugLog(`Trying path: ${path}`);
+    // Add timestamp to prevent caching
+          const timestamp = new Date().getTime();
+          const response = await fetch(`${path}?_=${timestamp}`);
+          
+          if (response.ok) {
         
         if (response.ok) {
           const rawText = await response.text();
