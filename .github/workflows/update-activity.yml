@@ -411,6 +411,13 @@ jobs:
         env:
           FCC_USERNAME: ${{ secrets.FCC_USERNAME }}
         run: node scrape-activity.js
+
+      - name: Check actual script content
+        run: |
+          echo "=== SCRIPT CONTENT ==="
+          cat scrape-activity.js
+          echo "=== LINE 308 ==="
+          sed -n '308p' scrape-activity.js
           
       # Commit & Push changes - With enhanced file paths
       - name: Commit & Push changes
