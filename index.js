@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const certificationTitles = document.querySelectorAll('.cert-title');
     
     // Log how many certification titles were found (for debugging)
-    console.log(`Found ${certificationTitles.length} certification titles`);
+    
     
     // Add click event listeners to each certification title
     certificationTitles.forEach(title => {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Log the action for debugging
-            console.log(`Toggled ${this.textContent.trim()}: ${certCard.classList.contains('expanded') ? 'expanded' : 'collapsed'}`);
+            
         });
     });
     

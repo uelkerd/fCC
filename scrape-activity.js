@@ -60,20 +60,20 @@ function saveActivityData(data) {
     fs.writeFileSync(filePath, jsonData);
   });
   
-  console.log(`💾 Data saved: ${data.length} entries`);
-  console.log(`📁 Files written: ${outputPaths.join(' ')}`);
+  
+  
   
   // Verification step - attempt to read back the data
   try {
     const verification = JSON.parse(fs.readFileSync(outputPaths[0], 'utf8'));
-    console.log(`✅ Verification: Successfully read back ${verification.length} entries`);
+    
   } catch (error) {
     console.error('❌ Verification failed:', error);
   }
 }
 
 async function scrapeActivity() {
-  console.log(`🕵️ Precisely capturing activity for: ${USERNAME}`);
+  
   
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -85,7 +85,7 @@ async function scrapeActivity() {
     await page.setViewport(SCRAPE_OPTIONS.viewport);
     
     const profileUrl = `https://www.freecodecamp.org/${USERNAME}`;
-    console.log(`🌐 Navigating to: ${profileUrl}`);
+    
     
     await page.goto(profileUrl, {
       waitUntil: 'networkidle2',
@@ -98,12 +98,12 @@ async function scrapeActivity() {
       visible: true 
     });
     
-    console.log('📊 Extracting pinpoint-precise activity data...');
+    
     
     // Take a screenshot of the heatmap for verification if in debug mode
     if (SCRAPE_OPTIONS.debugMode) {
       await page.screenshot({ path: 'heatmap-screenshot.png', fullPage: false });
-      console.log('📸 Screenshot saved for verification');
+      
     }
     
     // Hyper-precise data extraction with improved logging and validation
@@ -113,13 +113,13 @@ async function scrapeActivity() {
       const cells = document.querySelectorAll('.react-calendar-heatmap rect');
       
       if (debugMode) {
-        console.log(`Found ${cells.length} heatmap cells`);
+        
       }
       
       cells.forEach((cell, index) => {
         const tooltip = cell.getAttribute('data-tip');
         if (!tooltip) {
-          if (debugMode) console.log(`Cell ${index}: No tooltip found`);
+          if (debugMode) {};
           return;
         }
         
@@ -134,7 +134,7 @@ async function scrapeActivity() {
         // Enhanced regex with more detailed capture groups
         const match = tooltip.match(/(\d+)\s*points? on ([A-Za-z]+)\s+(\d+),\s+(\d+)/i);
         if (!match) {
-          if (debugMode) console.log(`Cell ${index}: Tooltip format not recognized: ${tooltip}`);
+          if (debugMode) {};
           return;
         }
         
@@ -188,12 +188,12 @@ async function scrapeActivity() {
     const { activityData: scrapedData, debugInfo } = activityData;
     
     if (SCRAPE_OPTIONS.debugMode && debugInfo) {
-      console.log(`🔍 Found ${debugInfo.length} cells with tooltips`);
+      
       fs.writeFileSync('debug-tooltip-data.json', JSON.stringify(debugInfo, null, 2));
-      console.log('📋 Saved raw tooltip data to debug-tooltip-data.json');
+      
     }
     
-    console.log(`📝 Captured ${scrapedData.length} activity entries`);
+    
     
     // Post-process the scraped data to ensure accuracy
     const processedData = postProcessActivityData(scrapedData);
@@ -249,9 +249,9 @@ function postProcessActivityData(scrapedData) {
   // Log what we found for the key dates of interest
   Object.keys(KNOWN_ACTIVITY).forEach(date => {
     if (dateMap[date]) {
-      console.log(`📅 Found data for ${date}: ${dateMap[date].count} points (level ${dateMap[date].level})`);
+      
     } else {
-      console.log(`⚠️ Missing data for ${date}`);
+      
     }
   });
   
@@ -259,13 +259,13 @@ function postProcessActivityData(scrapedData) {
   Object.entries(KNOWN_ACTIVITY).forEach(([date, data]) => {
     // If we have data for this date but it doesn't match what we know is correct
     if (dateMap[date] && dateMap[date].count !== data.count) {
-      console.log(`🔄 Correcting data for ${date}: ${dateMap[date].count} -> ${data.count} points`);
+      
       dateMap[date].count = data.count;
       dateMap[date].level = data.level;
     } 
     // If we don't have data for this date, add it
     else if (!dateMap[date]) {
-      console.log(`➕ Adding missing data for ${date}: ${data.count} points`);
+      
       dateMap[date] = { 
         count: data.count, 
         level: data.level 
@@ -278,7 +278,7 @@ function postProcessActivityData(scrapedData) {
   if (!dateMap[today]) {
     // Only add today if it's not already in our known dates
     if (!KNOWN_ACTIVITY[today]) {
-      console.log(`➕ Adding entry for today (${today})`);
+      
       dateMap[today] = { count: 0, level: 0 };
     }
   }
@@ -337,7 +337,7 @@ function postProcessActivityData(scrapedData) {
   // Final sort by date
   result.sort((a, b) => a.date.localeCompare(b.date));
   
-  console.log(`🧹 Processed data: ${result.length} total entries`);
+  
   return result;
 }
 
