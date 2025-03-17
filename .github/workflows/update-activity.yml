@@ -197,19 +197,46 @@ jobs:
               // Post-process the scraped data to ensure accuracy
               const processedData = postProcessActivityData(scrapedData);
               
-              // Save processed data
-              const outputDir = path.join(process.cwd(), 'public');
-              fs.mkdirSync(outputDir, { recursive: true });
+              // Save processed data to multiple locations for maximum compatibility
+              // Create output directories
+              const outputDirs = [
+                path.join(process.cwd(), 'public'),
+                path.join(process.cwd(), 'docs')
+              ];
               
-              const publicOutputPath = path.join(outputDir, 'activity-data.json');
-              const rootOutputPath = path.join(process.cwd(), 'activity-data.json');
+              // Ensure directories exist
+              outputDirs.forEach(dir => {
+                fs.mkdirSync(dir, { recursive: true });
+              });
               
+              // Define all output paths
+              const outputPaths = [
+                // Root directory
+                path.join(process.cwd(), 'activity-data.json'),
+                // Public directory (standard)
+                path.join(process.cwd(), 'public', 'activity-data.json'),
+                // Docs directory (for GitHub Pages)
+                path.join(process.cwd(), 'docs', 'activity-data.json')
+              ];
+              
+              // Create JSON string once
               const jsonData = JSON.stringify(processedData, null, 2);
               
-              fs.writeFileSync(publicOutputPath, jsonData);
-              fs.writeFileSync(rootOutputPath, jsonData);
+              // Write to all paths
+              outputPaths.forEach(filePath => {
+                fs.writeFileSync(filePath, jsonData);
+              });
               
-              console.log(`💾 Data saved: ${processedData.length} entries`);
+              console.log(`💾 PRECISE Data saved: ${processedData.length} entries`);
+              console.log(`📁 Files written: ${outputPaths.join(' ')}`);
+              
+              // Verification step - attempt to read back the data
+              try {
+                const verification = JSON.parse(fs.readFileSync(outputPaths[0], 'utf8'));
+                console.log(`✅ Verification: Successfully read back ${verification.length} entries`);
+              } catch (error) {
+                console.error('❌ Verification failed:', error);
+              }
               
             } catch (error) {
               console.error('❌ Scraping error:', error);
@@ -233,14 +260,34 @@ jobs:
               
               console.log('🚨 Using fallback data with known activity values');
               
-              const outputDir = path.join(process.cwd(), 'public');
-              fs.mkdirSync(outputDir, { recursive: true });
+              // Create output directories
+              const outputDirs = [
+                path.join(process.cwd(), 'public'),
+                path.join(process.cwd(), 'docs')
+              ];
               
-              const publicOutputPath = path.join(outputDir, 'activity-data.json');
-              const rootOutputPath = path.join(process.cwd(), 'activity-data.json');
+              // Ensure directories exist
+              outputDirs.forEach(dir => {
+                fs.mkdirSync(dir, { recursive: true });
+              });
               
-              fs.writeFileSync(publicOutputPath, JSON.stringify(fallbackData, null, 2));
-              fs.writeFileSync(rootOutputPath, JSON.stringify(fallbackData, null, 2));
+              // Define all output paths
+              const outputPaths = [
+                // Root directory
+                path.join(process.cwd(), 'activity-data.json'),
+                // Public directory (standard)
+                path.join(process.cwd(), 'public', 'activity-data.json'),
+                // Docs directory (for GitHub Pages)
+                path.join(process.cwd(), 'docs', 'activity-data.json')
+              ];
+              
+              // Create JSON string once
+              const jsonData = JSON.stringify(fallbackData, null, 2);
+              
+              // Write to all paths
+              outputPaths.forEach(filePath => {
+                fs.writeFileSync(filePath, jsonData);
+              });
             } finally {
               await browser.close();
             }
@@ -365,14 +412,14 @@ jobs:
           FCC_USERNAME: ${{ secrets.FCC_USERNAME }}
         run: node scrape-activity.js
           
-      # FIXED: Commit & Push changes - Preserves the changes made by the scraper
+      # Commit & Push changes - With enhanced file paths
       - name: Commit & Push changes
         run: |
           git config user.name 'GitHub Actions Bot'
           git config user.email 'actions@github.com'
           
-          # Stage the activity data files - DO NOT reset first
-          git add activity-data.json public/activity-data.json
+          # Stage all the activity data files in various locations
+          git add activity-data.json public/activity-data.json docs/activity-data.json
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
