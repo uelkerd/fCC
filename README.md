@@ -1,7 +1,7 @@
-# <img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="200"> Projects
+# <a href='https://www.freecodecamp.org'><img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="200"></a> Projects
 
 
-This repository contains my solutions and projects completed as part of the [freeCodeCamp](https://www.freecodecamp.org/) curriculum.
+This repository contains my solutions and projects completed as part of the <a href='https://www.freecodecamp.org'><img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="100"></a> curriculum.
 
 ## About freeCodeCamp
 
