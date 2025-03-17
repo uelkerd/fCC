@@ -365,27 +365,25 @@ jobs:
           FCC_USERNAME: ${{ secrets.FCC_USERNAME }}
         run: node scrape-activity.js
           
-      # Fixed "Commit & Push changes" step to handle unstaged changes correctly
+      # FIXED: Commit & Push changes - Preserves the changes made by the scraper
       - name: Commit & Push changes
         run: |
           git config user.name 'GitHub Actions Bot'
           git config user.email 'actions@github.com'
           
-          # First fetch the latest changes from the remote
-          git fetch origin
-          
-          # Discard all local changes and reset to match the remote branch
-          # This ensures we don't have any unstaged changes that would block the rebase
-          git reset --hard origin/main
-          
-          # Now stage only the files we want to commit
+          # Stage the activity data files - DO NOT reset first
           git add activity-data.json public/activity-data.json
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit - activity data is already up to date"
           else
-            # Commit and push the changes
+            # Commit the changes
             git commit -m "Update activity data [skip ci]"
-            git push origin main
+            
+            # Pull with rebase in case there are remote changes
+            git pull --rebase origin main
+            
+            # Force push the changes to main
+            git push -f origin main
           fi
