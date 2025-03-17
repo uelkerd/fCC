@@ -198,7 +198,7 @@ async function scrapeActivity() {
     // Post-process the scraped data to ensure accuracy
     const processedData = postProcessActivityData(scrapedData);
     
-    // Save the processed data
+    // Save the processed data - passing the correct variable
     saveActivityData(processedData);
     
   } catch (error) {
@@ -223,7 +223,7 @@ async function scrapeActivity() {
     
     console.log('🚨 Using fallback data with known activity values');
     
-    // Save the fallback data
+    // Save the fallback data - making sure to pass the fallbackData variable
     saveActivityData(fallbackData);
     
   } finally {
