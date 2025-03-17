@@ -466,6 +466,13 @@ footer a:hover {
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   margin-top: 5px;
 }
+
+.heatmap-empty-state {
+  text-align: center;
+  color: #a0a0a0;
+  padding: 20px;
+  font-style: italic;
+}
   
 .heatmap-cell[data-level="0"] { background-color: #161b22; }
 .heatmap-cell[data-level="1"] { background-color: #0e4429; }
