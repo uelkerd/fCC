@@ -82,20 +82,58 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
+   * Get the base URL for the current page, handling GitHub Pages subpaths
+   * @returns {string} Base URL including any path prefix
+   */
+  function getBaseUrl() {
+    const fullPath = window.location.pathname;
+    
+    // For GitHub Pages, if we're in a project repo (not username.github.io)
+    // we need to include the repo name in the base URL
+    if (fullPath.includes('/fCC/')) {
+      // Extract the part up to and including 'fCC/'
+      const pathParts = fullPath.split('/fCC/');
+      return pathParts[0] + '/fCC/';
+    }
+    
+    // For other cases, just return the directory part of the current path
+    const pathWithoutFilename = fullPath.substring(0, fullPath.lastIndexOf('/') + 1);
+    return pathWithoutFilename || '/';
+  }
+
+  /**
    * Fetch activity data with improved error handling
    * @returns {Promise<Array>} Activity entries
    */
   async function fetchActivityData() {
     debugLog('Attempting to fetch activity data');
     
-    // Try multiple file paths
+    // Get the base URL for GitHub Pages compatibility
+    const baseUrl = getBaseUrl();
+    debugLog(`Using base URL: ${baseUrl}`);
+    
+    // Try multiple file paths with both absolute and relative paths
     const fetchPaths = [
+      // Relative paths
       'activity-data.json',
-      '/activity-data.json',
       './activity-data.json',
+      '../activity-data.json',
       'public/activity-data.json',
+      './public/activity-data.json',
+      
+      // Base URL paths (for GitHub Pages with subpaths)
+      `${baseUrl}activity-data.json`,
+      `${baseUrl}public/activity-data.json`,
+      `${baseUrl}docs/activity-data.json`,
+      
+      // Absolute paths from root
+      '/activity-data.json',
       '/public/activity-data.json',
-      './public/activity-data.json'
+      '/docs/activity-data.json',
+      
+      // If GitHub Pages uses username.github.io/fCC format
+      '/fCC/activity-data.json',
+      '/fCC/public/activity-data.json'
     ];
     
     let fetchErrors = [];
