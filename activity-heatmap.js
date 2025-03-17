@@ -1,17 +1,17 @@
 /**
- * Accurate Activity Heatmap Renderer
+ * Precision Activity Heatmap Renderer
  * 
- * Focuses on displaying genuine user activity with minimal assumptions
+ * Displays ONLY genuine user activity without assumptions
  */
 document.addEventListener('DOMContentLoaded', function() {
   const HEATMAP_CONFIG = {
     container: document.getElementById('activity-heatmap'),
     dateRangeElement: document.querySelector('.activity-date-range'),
-    emptyStateMessage: 'No activity recorded yet'
+    emptyStateMessage: 'No freeCodeCamp activity recorded yet'
   };
 
   /**
-   * Format dates in a human-readable way
+   * Format dates for human readability
    * @param {string} dateString - ISO date string
    * @returns {string} Formatted date
    */
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * Render empty state when no activity is found
+   * Render empty state when no activity exists
    */
   function renderEmptyState() {
     HEATMAP_CONFIG.container.innerHTML = '';
@@ -36,19 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     HEATMAP_CONFIG.container.appendChild(emptyMessage);
     
-    // Update date range to current period
+    // Default date range to current period
     if (HEATMAP_CONFIG.dateRangeElement) {
-      const currentDate = new Date();
-      const sixMonthsAgo = new Date();
-      sixMonthsAgo.setMonth(currentDate.getMonth() - 5);
-      
-      HEATMAP_CONFIG.dateRangeElement.textContent = 
-        `${sixMonthsAgo.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - ${currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+      HEATMAP_CONFIG.dateRangeElement.textContent = 'No activity yet';
     }
   }
 
   /**
-   * Fetch and process activity data
+   * Fetch activity data with strict validation
+   * @returns {Promise<Array>} Activity entries
    */
   async function fetchActivityData() {
     const fetchPaths = [
@@ -61,61 +57,64 @@ document.addEventListener('DOMContentLoaded', function() {
         const response = await fetch(path);
         if (response.ok) {
           const data = await response.json();
-          return data;
+          
+          // STRICT: Only return data with actual activity
+          const validData = data.filter(entry => entry.count > 0);
+          return validData;
         }
       } catch (error) {
         console.warn(`Failed to fetch from ${path}:`, error);
       }
     }
     
-    return []; // Return empty array if no data found
+    return []; // Explicitly return empty array
   }
 
   /**
-   * Render heatmap with actual activity data
-   * @param {Array} activityData - Genuine activity entries
+   * Render heatmap with strict activity data
+   * @param {Array} activityData - Verified activity entries
    */
   function renderHeatmap(activityData) {
-    // If no activity, show empty state
+    // Immediate empty state if no data
     if (activityData.length === 0) {
       renderEmptyState();
       return;
     }
 
-    // Sort and process data
-    const sortedData = activityData.sort((a, b) => new Date(a.date) - new Date(b.date));
-    
+    // Sort data chronologically
+    const sortedData = activityData.sort((a, b) => 
+      new Date(a.date) - new Date(b.date)
+    );
+
     // Clear previous content
     HEATMAP_CONFIG.container.innerHTML = '';
     
-    // Create month labels (if data exists)
+    // Create month labels
     const monthLabels = createMonthLabels(sortedData);
-    const grid = createActivityGrid(sortedData);
-    
-    // Append to container
     HEATMAP_CONFIG.container.appendChild(monthLabels);
+    
+    // Create activity grid
+    const grid = createActivityGrid(sortedData);
     HEATMAP_CONFIG.container.appendChild(grid);
     
-    // Update date range
+    // Update date range display
     updateDateRange(sortedData);
   }
 
   /**
-   * Create month labels for the heatmap
-   * @param {Array} sortedData - Sorted activity data
+   * Create month labels from activity data
+   * @param {Array} sortedData - Chronologically sorted data
    * @returns {HTMLElement} Month labels container
    */
   function createMonthLabels(sortedData) {
     const monthLabels = document.createElement('div');
     monthLabels.className = 'heatmap-month-labels';
     
-    const months = new Set();
-    sortedData.forEach(item => {
-      const month = new Date(item.date).toLocaleDateString('en-US', { month: 'short' });
-      months.add(month);
-    });
+    const monthSet = new Set(sortedData.map(entry => 
+      new Date(entry.date).toLocaleDateString('en-US', { month: 'short' })
+    ));
     
-    Array.from(months).forEach(month => {
+    monthSet.forEach(month => {
       const label = document.createElement('div');
       label.className = 'heatmap-month-label';
       label.textContent = month;
@@ -126,8 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * Create activity grid
-   * @param {Array} sortedData - Sorted activity data
+   * Create activity grid from data
+   * @param {Array} sortedData - Chronologically sorted data
    * @returns {HTMLElement} Activity grid
    */
   function createActivityGrid(sortedData) {
@@ -149,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /**
    * Update date range display
-   * @param {Array} sortedData - Sorted activity data
+   * @param {Array} sortedData - Chronologically sorted data
    */
   function updateDateRange(sortedData) {
     if (HEATMAP_CONFIG.dateRangeElement) {
@@ -176,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
   fetchActivityData()
     .then(renderHeatmap)
     .catch(error => {
-      console.error('Failed to render heatmap:', error);
+      console.error('Heatmap rendering failed:', error);
       renderEmptyState();
     });
 });
