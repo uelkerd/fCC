@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My <img src='https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg' alt='freeCodeCamp'> Journey</title>
+    <title>My <img src='https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg' alt='freeCodeCamp'> Journey</title>
     <!-- Add the JavaScript file first so it removes no-js class early -->
     <script src="index.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -12,6 +12,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- New Navbar (Added to meet fCC requirements) -->
+    <nav id="navbar">
+        <ul>
+            <li><a href="#welcome-section">Home</a></li>
+            <li><a href="#project-section">Projects</a></li>
+            <li><a href="#certifications">Certifications</a></li>
+        </ul>
+    </nav>
+
+    <!-- New Welcome Section (Added to meet fCC requirements) -->
+    <section id="welcome-section">
+        <div class="container">
+            <h1>Hello, I'm a Web Developer</h1>
+            <p>Learning and growing through freeCodeCamp</p>
+        </div>
+    </section>
+
     <header>
         <div class="container">
             <h1><a href='https://www.freecodecamp.org'><img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="200"></a> <span class="portfolio-text">Portfolio</span></h1>
@@ -21,19 +38,52 @@
 
     <main class="container">
         <section class="intro">
-            <p>This portfolio showcases the projects I've built while completing the freeCodeCamp curriculum. <br>Each certification represents a milestone in the corresponding skill area.</p>
+            <p>This portfolio showcases the projects I've built while completing the freeCodeCamp curriculum. <br>Each certification represents a milestone in my web development skills.</p>
         </section>
         
         <!-- fCC activity heatmap -->
-                <section class="activity-card">
-                  <h2>My fCC Activity</h2>
-                  <div id="activity-heatmap" class="activity-heatmap-container">
-                    <!-- Heatmap will be rendered here -->
-                    <div class="loading-message">Loading activity data...</div>
-                  </div>
-                  <div class="activity-date-range">Last 6 Months of Activity</div>
-                </section>
+        <section class="activity-card">
+            <h2>My fCC Activity</h2>
+            <div id="activity-heatmap" class="activity-heatmap-container">
+                <!-- Heatmap will be rendered here -->
+                <div class="loading-message">Loading activity data...</div>
+            </div>
+            <div class="activity-date-range">Last 6 Months of Activity</div>
+        </section>
         
+        <!-- New Projects Section (Modified to meet fCC requirements) -->
+        <section id="project-section">
+            <h2>My Projects</h2>
+            <div class="projects">
+                <!-- Responsive Web Design Projects -->
+                <a href="01 - Responsive Web Design Certification/01 - Survey Form/" class="project project-tile" target="_blank">
+                    <span class="project-name">Survey Form</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/01-preview.png" alt="Survey Form preview">
+                    </div>
+                </a>
+                <a href="01 - Responsive Web Design Certification/02 - Tribute Page/" class="project project-tile" target="_blank">
+                    <span class="project-name">Tribute Page</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/02-preview.png" alt="Tribute Page preview">
+                    </div>
+                </a>
+                <a href="01 - Responsive Web Design Certification/03 - Technical Documentation Page/" class="project project-tile" target="_blank">
+                    <span class="project-name">Technical Documentation</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/03-preview.png" alt="Technical Documentation preview">
+                    </div>
+                </a>
+                <a href="01 - Responsive Web Design Certification/04 - Product Landing Page/" class="project project-tile" target="_blank">
+                    <span class="project-name">Product Landing Page</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/04-preview.png" alt="Product Landing Page preview">
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section id="certifications" class="certifications">
         <section class="certifications">
             <h2>Certifications & Projects</h2>
             
@@ -202,12 +252,15 @@
                 </div>
             </div>
         </section>
+        </section>
     </main>
 
     <footer>
         <div class="container">
             <p>&copy; 2025 - Built while learning with <a href="https://www.freecodecamp.org" target="_blank">freeCodeCamp</a></p>
             <p>Hosted on <a href="https://github.com/uelkerd/fCC" target="_blank">GitHub Pages</a></p>
+            <!-- Added GitHub profile link to meet fCC requirements -->
+            <a href="https://github.com/uelkerd" id="profile-link" target="_blank">My GitHub Profile</a>
         </div>
     </footer>
     <script src="activity-heatmap.js"></script>
