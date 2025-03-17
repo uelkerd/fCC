@@ -1,4 +1,4 @@
-# freeCodeCamp Projects
+# ![freeCodeCamp](https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg) Projects
 
 This repository contains my solutions and projects completed as part of the [freeCodeCamp](https://www.freecodecamp.org/) curriculum.
 
