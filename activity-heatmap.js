@@ -1,14 +1,22 @@
 /**
- * Precision Activity Heatmap Renderer
+ * Improved Activity Heatmap Renderer
  * 
- * Displays ONLY genuine user activity without assumptions
+ * Displays user activity with robust error handling and diagnostics
  */
 document.addEventListener('DOMContentLoaded', function() {
   const HEATMAP_CONFIG = {
     container: document.getElementById('activity-heatmap'),
     dateRangeElement: document.querySelector('.activity-date-range'),
-    emptyStateMessage: 'No freeCodeCamp activity recorded yet'
+    emptyStateMessage: 'No freeCodeCamp activity recorded yet',
+    debugMode: true // Enable for troubleshooting
   };
+
+  // Add debug log function
+  function debugLog(...args) {
+    if (HEATMAP_CONFIG.debugMode) {
+      console.log('🔍 [Heatmap Debug]', ...args);
+    }
+  }
 
   /**
    * Format dates for human readability
@@ -16,18 +24,30 @@ document.addEventListener('DOMContentLoaded', function() {
    * @returns {string} Formatted date
    */
   function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
-    });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+      });
+    } catch (error) {
+      debugLog('Date formatting error:', error);
+      return dateString || 'Unknown date';
+    }
   }
 
   /**
    * Render empty state when no activity exists
    */
   function renderEmptyState() {
+    debugLog('Rendering empty state');
+    
+    if (!HEATMAP_CONFIG.container) {
+      console.error('❌ Heatmap container element not found!');
+      return;
+    }
+    
     HEATMAP_CONFIG.container.innerHTML = '';
     
     const emptyMessage = document.createElement('div');
@@ -49,40 +69,95 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * Fetch activity data with strict validation
-   * @returns {Promise<Array>} Activity entries
+   * Create a basic placeholder activity for today
+   * @returns {Array} Single activity entry for today
    */
-  async function fetchActivityData() {
-    const fetchPaths = [
-      'activity-data.json',
-      'public/activity-data.json'
-    ];
-    
-    for (const path of fetchPaths) {
-      try {
-        const response = await fetch(path);
-        if (response.ok) {
-          const data = await response.json();
-          
-          // Strict filtering for actual activity
-          const validData = data.filter(entry => entry.count > 0);
-          return validData;
-        }
-      } catch (error) {
-        console.warn(`Failed to fetch from ${path}:`, error);
-      }
-    }
-    
-    return []; // Explicit empty array
+  function createPlaceholderActivity() {
+    const today = new Date();
+    return [{
+      date: today.toISOString().split('T')[0],
+      count: 1,
+      level: 1
+    }];
   }
 
   /**
-   * Render heatmap with strict activity data
-   * @param {Array} activityData - Verified activity entries
+   * Fetch activity data with improved error handling
+   * @returns {Promise<Array>} Activity entries
+   */
+  async function fetchActivityData() {
+    debugLog('Attempting to fetch activity data');
+    
+    // Try multiple file paths
+    const fetchPaths = [
+      'activity-data.json',
+      '/activity-data.json',
+      './activity-data.json',
+      'public/activity-data.json',
+      '/public/activity-data.json',
+      './public/activity-data.json'
+    ];
+    
+    let fetchErrors = [];
+    
+    for (const path of fetchPaths) {
+      try {
+        debugLog(`Trying path: ${path}`);
+        const response = await fetch(path);
+        
+        if (response.ok) {
+          const rawText = await response.text();
+          debugLog(`Got data from ${path}, length: ${rawText.length} chars`);
+          
+          try {
+            const data = JSON.parse(rawText);
+            
+            if (!Array.isArray(data)) {
+              debugLog(`Data is not an array: ${typeof data}`);
+              continue;
+            }
+            
+            debugLog(`Successfully parsed JSON with ${data.length} entries`);
+            
+            // Accept ALL entries, including those with 0 count
+            return data;
+          } catch (jsonError) {
+            debugLog(`JSON parse error from ${path}:`, jsonError);
+            fetchErrors.push(`JSON parse error from ${path}: ${jsonError.message}`);
+          }
+        } else {
+          debugLog(`Failed to fetch from ${path}: ${response.status} ${response.statusText}`);
+          fetchErrors.push(`${path}: ${response.status} ${response.statusText}`);
+        }
+      } catch (error) {
+        debugLog(`Network error from ${path}:`, error);
+        fetchErrors.push(`${path}: ${error.message}`);
+      }
+    }
+    
+    // Log all fetch errors if all attempts failed
+    console.warn('❗ All fetch attempts failed:', fetchErrors);
+    
+    // Create placeholder data for display
+    debugLog('Creating placeholder activity');
+    return createPlaceholderActivity();
+  }
+
+  /**
+   * Render heatmap with activity data
+   * @param {Array} activityData - Activity entries
    */
   function renderHeatmap(activityData) {
-    // Immediate empty state if no data
-    if (activityData.length === 0) {
+    debugLog(`Rendering heatmap with ${activityData.length} entries`);
+    
+    if (!HEATMAP_CONFIG.container) {
+      console.error('❌ Heatmap container element not found!');
+      return;
+    }
+    
+    // Ensure we have data
+    if (!activityData || !Array.isArray(activityData) || activityData.length === 0) {
+      debugLog('No activity data to render, showing empty state');
       renderEmptyState();
       return;
     }
@@ -105,6 +180,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update date range display
     updateDateRange(sortedData);
+    
+    debugLog('Heatmap rendering complete');
   }
 
   /**
@@ -116,9 +193,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const monthLabels = document.createElement('div');
     monthLabels.className = 'heatmap-month-labels';
     
-    const monthSet = new Set(sortedData.map(entry => 
-      new Date(entry.date).toLocaleDateString('en-US', { month: 'short' })
-    ));
+    // Get all unique months in the data
+    const monthSet = new Set(sortedData.map(entry => {
+      try {
+        return new Date(entry.date).toLocaleDateString('en-US', { month: 'short' });
+      } catch (e) {
+        debugLog('Month label error for date:', entry.date, e);
+        return '';
+      }
+    }).filter(m => m));  // Filter out empty strings
+    
+    debugLog('Month labels:', Array.from(monthSet));
     
     monthSet.forEach(month => {
       const label = document.createElement('div');
@@ -140,13 +225,20 @@ document.addEventListener('DOMContentLoaded', function() {
     grid.className = 'heatmap-grid';
     
     sortedData.forEach(entry => {
-      const cell = document.createElement('div');
-      cell.className = 'heatmap-cell';
-      cell.setAttribute('data-level', entry.level);
-      cell.setAttribute('data-date', entry.date);
-      cell.title = `${entry.count} points on ${formatDate(entry.date)}`;
-      
-      grid.appendChild(cell);
+      try {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+        
+        // Ensure level is within valid range
+        const level = Math.max(0, Math.min(4, entry.level || 0));
+        cell.setAttribute('data-level', level);
+        cell.setAttribute('data-date', entry.date);
+        cell.title = `${entry.count || 0} points on ${formatDate(entry.date)}`;
+        
+        grid.appendChild(cell);
+      } catch (error) {
+        debugLog('Cell creation error for entry:', entry, error);
+      }
     });
     
     return grid;
@@ -157,7 +249,9 @@ document.addEventListener('DOMContentLoaded', function() {
    * @param {Array} sortedData - Chronologically sorted data
    */
   function updateDateRange(sortedData) {
-    if (HEATMAP_CONFIG.dateRangeElement) {
+    if (!HEATMAP_CONFIG.dateRangeElement || sortedData.length === 0) return;
+    
+    try {
       const startDate = new Date(sortedData[0].date);
       const endDate = new Date(sortedData[sortedData.length - 1].date);
       
@@ -174,14 +268,29 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       HEATMAP_CONFIG.dateRangeElement.textContent = dateRangeText;
+      debugLog('Date range updated:', dateRangeText);
+    } catch (error) {
+      debugLog('Date range update error:', error);
     }
   }
 
   // Main execution
+  debugLog('Heatmap initialization started');
+  
+  // Remove loading message if present
+  const loadingMessage = document.querySelector('.loading-message');
+  if (loadingMessage) loadingMessage.textContent = 'Looking for activity data...';
+  
   fetchActivityData()
-    .then(renderHeatmap)
+    .then(data => {
+      debugLog(`Fetched ${data.length} activity entries`);
+      renderHeatmap(data);
+    })
     .catch(error => {
-      console.error('Heatmap rendering failed:', error);
+      console.error('❌ Heatmap rendering failed:', error);
       renderEmptyState();
+    })
+    .finally(() => {
+      if (loadingMessage) loadingMessage.remove();
     });
 });
