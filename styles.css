@@ -480,8 +480,6 @@ footer a:hover {
 .heatmap-cell[data-level="3"] { background-color: #26a641; }
 .heatmap-cell[data-level="4"] { background-color: #39d353; }
 
-/* Existing styles, with additions to meet fCC requirements */
-
 /* Navbar Styles - Fixed to top of viewport */
 #navbar {
     position: fixed;
