@@ -66,6 +66,5 @@ Each folder represents a different certification or module from freeCodeCamp. Wi
 - FreeCodeCamp: [uelkerd@fCC](https://www.freecodecamp.org/uelkerd)
 
 ---
-
-*This repository is continuously updated as I progress through the freeCodeCamp curriculum.*)
+(This repository is continuously updated as I progress through the freeCodeCamp curriculum.)
 ---
