@@ -423,6 +423,7 @@ footer a:hover {
   grid-template-rows: repeat(7, 1fr);
   grid-auto-flow: column;
   gap: 2px;
+  position: relative;
 }
   
 .heatmap-month-labels {
@@ -441,8 +442,32 @@ footer a:hover {
   height: 12px;
   border-radius: 2px;
   background-color: #161b22;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+.heatmap-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  z-index: 20;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  margin-top: 5px;
 }
   
+.heatmap-cell[data-level="0"] { background-color: #161b22; }
 .heatmap-cell[data-level="1"] { background-color: #0e4429; }
 .heatmap-cell[data-level="2"] { background-color: #006d32; }
 .heatmap-cell[data-level="3"] { background-color: #26a641; }
