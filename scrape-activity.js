@@ -303,7 +303,10 @@ async function saveActivityData(data) {
   const publicOutputPath = path.join(outputDir, 'activity-data.json');
   const rootOutputPath = path.join(process.cwd(), 'activity-data.json');
   
-  const jsonData = JSON.stringify(data, null, 2);
+  const jsonData = JSON.stringify({
+    last_updated: new Date().toISOString(),
+    data: processedData
+  }, null, 2);
   
   try {
     fs.writeFileSync(publicOutputPath, jsonData);
