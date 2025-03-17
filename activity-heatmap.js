@@ -188,62 +188,79 @@ document.addEventListener('DOMContentLoaded', function() {
    * @param {Array} sortedData - Chronologically sorted data
    * @returns {HTMLElement} Activity grid
    */
-  function createActivityGrid(sortedData) {
-    try {
-      debugLog(`Creating grid with ${sortedData.length} cells`);
-      
-      const grid = document.createElement('div');
-      grid.className = 'heatmap-grid';
-      grid.style.display = 'grid';
-      grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(12px, 1fr))';
-      grid.style.gap = '2px';
-      grid.style.width = '100%';
-      
-      let cellsCreated = 0;
-      sortedData.forEach(entry => {
+      function createActivityGrid(sortedData) {
         try {
-          const cell = document.createElement('div');
-          cell.className = 'heatmap-cell';
-          cell.style.width = '12px';
-          cell.style.height = '12px';
-          cell.style.borderRadius = '2px';
+          debugLog(`Creating grid with ${sortedData.length} cells`);
           
-          // Ensure level is within valid range
-          const level = Math.max(0, Math.min(4, entry.level || 0));
+          const grid = document.createElement('div');
+          grid.className = 'heatmap-grid';
           
-          // Apply color based on level
-          const colors = [
-            '#ebedf0', // Level 0
-            '#9be9a8', // Level 1
-            '#40c463', // Level 2
-            '#30a14e', // Level 3
-            '#216e39'  // Level 4
-          ];
-          cell.style.backgroundColor = colors[level];
+          // Calculate grid dimensions
+          const numWeeks = Math.ceil(sortedData.length / 7);
           
-          cell.setAttribute('data-level', level);
-          cell.setAttribute('data-date', entry.date);
-          cell.title = `${entry.count || 0} points on ${formatDate(entry.date)}`;
+          // Fix the grid layout - this is the key change
+          grid.style.display = 'grid';
+          grid.style.gridTemplateColumns = `repeat(${numWeeks}, 12px)`;
+          grid.style.gridTemplateRows = 'repeat(7, 12px)';
+          grid.style.gap = '2px';
+          grid.style.width = '100%'; 
+          grid.style.justifyContent = 'space-between'; // Distribute columns evenly
           
-          grid.appendChild(cell);
-          cellsCreated++;
+          // Group data by week for proper rendering
+          const weeks = [];
+          for (let i = 0; i < numWeeks; i++) {
+            weeks.push(sortedData.slice(i * 7, (i + 1) * 7));
+          }
+          
+          // Create cells ordered by column (week) for proper display
+          for (let row = 0; row < 7; row++) {
+            for (let col = 0; col < weeks.length; col++) {
+              const weekData = weeks[col];
+              const entry = weekData[row];
+              
+              if (!entry) continue; // Skip if no data for this day
+              
+              const cell = document.createElement('div');
+              cell.className = 'heatmap-cell';
+              cell.style.width = '12px';
+              cell.style.height = '12px';
+              cell.style.borderRadius = '2px';
+              
+              // Place cell in proper position in grid
+              cell.style.gridColumn = `${col + 1}`;
+              cell.style.gridRow = `${row + 1}`;
+              
+              // Ensure level is within valid range
+              const level = Math.max(0, Math.min(4, entry.level || 0));
+              
+              // Apply color based on level
+              const colors = [
+                '#ebedf0', // Level 0
+                '#9be9a8', // Level 1
+                '#40c463', // Level 2
+                '#30a14e', // Level 3
+                '#216e39'  // Level 4
+              ];
+              cell.style.backgroundColor = colors[level];
+              
+              cell.setAttribute('data-level', level);
+              cell.setAttribute('data-date', entry.date);
+              cell.title = `${entry.count || 0} points on ${formatDate(entry.date)}`;
+              
+              grid.appendChild(cell);
+            }
+          }
+          
+          return grid;
         } catch (error) {
-          debugLog('Cell creation error for entry:', entry, error);
+          console.error('❌ Fatal error creating grid:', error);
+          // Create a basic fallback grid
+          const fallbackGrid = document.createElement('div');
+          fallbackGrid.textContent = 'Error rendering activity. See console for details.';
+          fallbackGrid.style.color = 'red';
+          return fallbackGrid;
         }
-      });
-      
-      debugLog(`Successfully created ${cellsCreated} cells out of ${sortedData.length}`);
-      return grid;
-    } catch (error) {
-      console.error('❌ Fatal error creating grid:', error);
-      // Create a very basic fallback grid
-      const fallbackGrid = document.createElement('div');
-      fallbackGrid.textContent = 'Error rendering activity. See console for details.';
-      fallbackGrid.style.color = 'red';
-      return fallbackGrid;
-    }
-  }
-
+      }
   /**
    * Create month labels from activity data
    * @param {Array} sortedData - Chronologically sorted data
