@@ -2,7 +2,7 @@ name: Update freeCodeCamp Activity
 
 on:
   schedule:
-    # Run daily at midnight
+    # Run daily at midnight UTC
     - cron: '0 0 * * *'
   workflow_dispatch: # Allow manual trigger
 
@@ -12,15 +12,98 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
           
       - name: Install dependencies
-        run: npm install puppeteer fs
+        run: |
+          npm init -y
+          npm install puppeteer
+          
+      - name: Create scripts directory
+        run: mkdir -p scripts
+        
+      - name: Create scrape-activity.js
+        run: |
+          cat > scripts/scrape-activity.js << EOL
+          const puppeteer = require('puppeteer');
+          const fs = require('fs');
+          const path = require('path');
+
+          async function scrapeActivity() {
+            const username = process.env.FCC_USERNAME || 'uelkerd';
+            const browser = await puppeteer.launch({
+              headless: 'new',
+              args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+            
+            try {
+              const page = await browser.newPage();
+              await page.goto(\`https://www.freecodecamp.org/\${username}\`, {
+                waitUntil: 'networkidle2',
+                timeout: 60000
+              });
+              
+              // Wait for heatmap to load
+              await page.waitForSelector('.react-calendar-heatmap', { timeout: 10000 });
+              
+              const activityData = await page.evaluate(() => {
+                const result = [];
+                const cells = document.querySelectorAll('.react-calendar-heatmap rect');
+                
+                cells.forEach(cell => {
+                  const tooltip = cell.getAttribute('data-tip');
+                  if (!tooltip) return;
+                  
+                  const match = tooltip.match(/(\d+) points on ([A-Za-z]+ \d+, \d+)/);
+                  if (!match) return;
+                  
+                  const count = parseInt(match[1], 10);
+                  const dateStr = new Date(match[2]).toISOString().split('T')[0];
+                  
+                  let level = 0;
+                  if (cell.classList.contains('color-scale-4')) level = 4;
+                  else if (cell.classList.contains('color-scale-3')) level = 3;
+                  else if (cell.classList.contains('color-scale-2')) level = 2;
+                  else if (cell.classList.contains('color-scale-1')) level = 1;
+                  
+                  result.push({ date: dateStr, count, level });
+                });
+                
+                return result;
+              });
+              
+              // Sort and deduplicate data
+              const uniqueData = Array.from(
+                new Map(activityData.map(item => [item.date, item])).values()
+              ).sort((a, b) => new Date(a.date) - new Date(b.date));
+              
+              // Ensure output directory exists
+              const outputDir = path.join(process.cwd(), 'public');
+              if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
+              }
+              
+              // Write to files
+              const outputPath = path.join(outputDir, 'activity-data.json');
+              fs.writeFileSync(outputPath, JSON.stringify(uniqueData, null, 2));
+              fs.writeFileSync('activity-data.json', JSON.stringify(uniqueData, null, 2));
+              
+              console.log(\`Saved \${uniqueData.length} activity entries\`);
+            } catch (error) {
+              console.error('Scraping failed:', error);
+              process.exit(1);
+            } finally {
+              await browser.close();
+            }
+          }
+
+          scrapeActivity();
+          EOL
         
       - name: Run scraper
         env:
@@ -29,8 +112,8 @@ jobs:
           
       - name: Commit & Push changes
         run: |
-          git config --global user.name 'GitHub Actions Bot'
-          git config --global user.email 'actions@github.com'
-          git add activity-data.json
+          git config user.name 'GitHub Actions Bot'
+          git config user.email 'actions@github.com'
+          git add activity-data.json public/activity-data.json
           git diff --quiet && git diff --staged --quiet || git commit -m "Update activity data [skip ci]"
           git push
