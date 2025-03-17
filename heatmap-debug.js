@@ -2,6 +2,23 @@
  * Enhanced debug script for activity heatmap with persistent controls
  * Allows reopening the diagnostic panel and refreshing the tests
  */
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Check if debug mode is enabled via URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const debugEnabled = urlParams.has('debug');
+  
+  console.log('🔍 Heatmap Debug: Initializing diagnostics');
+  
+  if (debugEnabled) {
+    // Create persistent debug button that stays visible
+    const debugButton = document.createElement('button');
+    // Rest of button creation and event handler code...
+    
+    // Auto-open panel on page load
+    showDebugPanel();
+  }
+  
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🔍 Heatmap Debug: Initializing diagnostics');
   
