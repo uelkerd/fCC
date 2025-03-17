@@ -26,6 +26,52 @@ const KNOWN_ACTIVITY = {
   '2025-03-16': { count: 8, level: 2 }
 };
 
+/**
+ * Save activity data to multiple locations
+ * @param {Array} data - Processed activity data to save
+ */
+function saveActivityData(data) {
+  // Create output directories
+  const outputDirs = [
+    path.join(process.cwd(), 'public'),
+    path.join(process.cwd(), 'docs')
+  ];
+  
+  // Ensure directories exist
+  outputDirs.forEach(dir => {
+    fs.mkdirSync(dir, { recursive: true });
+  });
+  
+  // Define all output paths
+  const outputPaths = [
+    // Root directory
+    path.join(process.cwd(), 'activity-data.json'),
+    // Public directory (standard)
+    path.join(process.cwd(), 'public', 'activity-data.json'),
+    // Docs directory (for GitHub Pages)
+    path.join(process.cwd(), 'docs', 'activity-data.json')
+  ];
+  
+  // Create JSON string once
+  const jsonData = JSON.stringify(data, null, 2);
+  
+  // Write to all paths
+  outputPaths.forEach(filePath => {
+    fs.writeFileSync(filePath, jsonData);
+  });
+  
+  console.log(`💾 Data saved: ${data.length} entries`);
+  console.log(`📁 Files written: ${outputPaths.join(' ')}`);
+  
+  // Verification step - attempt to read back the data
+  try {
+    const verification = JSON.parse(fs.readFileSync(outputPaths[0], 'utf8'));
+    console.log(`✅ Verification: Successfully read back ${verification.length} entries`);
+  } catch (error) {
+    console.error('❌ Verification failed:', error);
+  }
+}
+
 async function scrapeActivity() {
   console.log(`🕵️ Precisely capturing activity for: ${USERNAME}`);
   
@@ -152,8 +198,8 @@ async function scrapeActivity() {
     // Post-process the scraped data to ensure accuracy
     const processedData = postProcessActivityData(scrapedData);
     
-    // Save data with precise logging
-    await saveActivityData(processedData);
+    // Save the processed data
+    saveActivityData(processedData);
     
   } catch (error) {
     console.error('❌ Precise scraping error:', error);
@@ -176,7 +222,10 @@ async function scrapeActivity() {
     }
     
     console.log('🚨 Using fallback data with known activity values');
-    await saveActivityData(fallbackData);
+    
+    // Save the fallback data
+    saveActivityData(fallbackData);
+    
   } finally {
     await browser.close();
   }
@@ -290,41 +339,6 @@ function postProcessActivityData(scrapedData) {
   
   console.log(`🧹 Processed data: ${result.length} total entries`);
   return result;
-}
-
-/**
- * Precision Data Saving
- * @param {Array} data - Verified activity entries
- */
-async function saveActivityData(data) {
-  const outputDir = path.join(process.cwd(), 'public');
-  fs.mkdirSync(outputDir, { recursive: true });
-  
-  const publicOutputPath = path.join(outputDir, 'activity-data.json');
-  const rootOutputPath = path.join(process.cwd(), 'activity-data.json');
-  
-  const jsonData = JSON.stringify({
-    last_updated: new Date().toISOString(),
-    data: processedData
-  }, null, 2);
-  
-  try {
-    fs.writeFileSync(publicOutputPath, jsonData);
-    fs.writeFileSync(rootOutputPath, jsonData);
-    
-    console.log(`💾 PRECISE Data saved: ${data.length} entries`);
-    console.log('📁 Files written:', publicOutputPath, rootOutputPath);
-    
-    // Verify the saved data is readable
-    try {
-      const readTest = JSON.parse(fs.readFileSync(rootOutputPath, 'utf8'));
-      console.log(`✅ Verification: Successfully read back ${readTest.length} entries`);
-    } catch (verifyError) {
-      console.error('⚠️ Data verification failed:', verifyError);
-    }
-  } catch (error) {
-    console.error('❌ Precise data save error:', error);
-  }
 }
 
 // Execute the ultra-precise scraper
