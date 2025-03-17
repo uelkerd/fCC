@@ -1,7 +1,20 @@
+/**
+ * Accurate Activity Heatmap Renderer
+ * 
+ * Focuses on displaying genuine user activity with minimal assumptions
+ */
 document.addEventListener('DOMContentLoaded', function() {
-  const heatmapContainer = document.getElementById('activity-heatmap');
-  
-  // Function to format date for display
+  const HEATMAP_CONFIG = {
+    container: document.getElementById('activity-heatmap'),
+    dateRangeElement: document.querySelector('.activity-date-range'),
+    emptyStateMessage: 'No activity recorded yet'
+  };
+
+  /**
+   * Format dates in a human-readable way
+   * @param {string} dateString - ISO date string
+   * @returns {string} Formatted date
+   */
   function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -10,134 +23,33 @@ document.addEventListener('DOMContentLoaded', function() {
       year: 'numeric'
     });
   }
-  
-  // Function to get month name
-  function getMonthName(date) {
-    return date.toLocaleDateString('en-US', { month: 'short' });
-  }
-  
-  // Function to render the heatmap
-  function renderHeatmap(activityData) {
-    // Remove any existing content
-    heatmapContainer.innerHTML = '';
+
+  /**
+   * Render empty state when no activity is found
+   */
+  function renderEmptyState() {
+    HEATMAP_CONFIG.container.innerHTML = '';
     
-    // Get date range for the heatmap
-    const dates = activityData.map(item => new Date(item.date));
-    const startDate = new Date(Math.min(...dates));
-    const endDate = new Date(Math.max(...dates));
+    const emptyMessage = document.createElement('div');
+    emptyMessage.className = 'heatmap-empty-state';
+    emptyMessage.textContent = HEATMAP_CONFIG.emptyStateMessage;
     
-    // Create month labels
-    const monthLabels = document.createElement('div');
-    monthLabels.className = 'heatmap-month-labels';
+    HEATMAP_CONFIG.container.appendChild(emptyMessage);
     
-    const months = [];
-    let currentDate = new Date(startDate);
-    
-    while (currentDate <= endDate) {
-      const monthName = getMonthName(currentDate);
-      if (!months.includes(monthName)) {
-        months.push(monthName);
-        
-        const label = document.createElement('div');
-        label.className = 'heatmap-month-label';
-        label.textContent = monthName;
-        monthLabels.appendChild(label);
-      }
+    // Update date range to current period
+    if (HEATMAP_CONFIG.dateRangeElement) {
+      const currentDate = new Date();
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(currentDate.getMonth() - 5);
       
-      currentDate.setMonth(currentDate.getMonth() + 1);
-    }
-    
-    // Create the grid
-    const grid = document.createElement('div');
-    grid.className = 'heatmap-grid';
-    
-    // Create a map of dates to activity counts
-    const activityMap = {};
-    activityData.forEach(item => {
-      activityMap[item.date] = {
-        count: item.count,
-        level: item.level
-      };
-    });
-    
-    // Generate cells for each day
-    const daysBetween = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-    const weeksNeeded = Math.ceil(daysBetween / 7);
-    
-    // Initialize the grid with empty cells
-    for (let row = 0; row < 7; row++) {
-      for (let col = 0; col < weeksNeeded; col++) {
-        const cell = document.createElement('div');
-        cell.className = 'heatmap-cell';
-        grid.appendChild(cell);
-      }
-    }
-    
-    // Fill in the grid with actual data
-    let currentDay = new Date(startDate);
-    let dayCount = 0;
-    
-    while (currentDay <= endDate) {
-      const dateStr = currentDay.toISOString().split('T')[0];
-      const dayOfWeek = currentDay.getDay(); // 0 = Sunday, 6 = Saturday
-      const weekNum = Math.floor(dayCount / 7);
-      
-      const cellIndex = dayOfWeek + (weekNum * 7);
-      const cell = grid.children[cellIndex];
-      
-      if (cell) {
-        const activity = activityMap[dateStr] || { count: 0, level: 0 };
-        
-        // Create tooltip
-        const tooltip = document.createElement('div');
-        tooltip.className = 'heatmap-tooltip';
-        tooltip.textContent = `${activity.count} points on ${formatDate(dateStr)}`;
-        
-        // Set data attributes for styling and tooltips
-        cell.setAttribute('data-level', activity.level);
-        cell.setAttribute('data-date', dateStr);
-        cell.title = `${activity.count} points on ${formatDate(dateStr)}`;
-        
-        // Add hover effect
-        cell.addEventListener('mouseenter', () => {
-          cell.appendChild(tooltip);
-        });
-        
-        cell.addEventListener('mouseleave', () => {
-          if (tooltip.parentElement) {
-            cell.removeChild(tooltip);
-          }
-        });
-      }
-      
-      currentDay.setDate(currentDay.getDate() + 1);
-      dayCount++;
-    }
-    
-    // Add everything to the container
-    heatmapContainer.appendChild(monthLabels);
-    heatmapContainer.appendChild(grid);
-    
-    // Update the date range text
-    const dateRangeEl = document.querySelector('.activity-date-range');
-    if (dateRangeEl) {
-      const startMonth = startDate.toLocaleDateString('en-US', { month: 'short' });
-      const endMonth = endDate.toLocaleDateString('en-US', { month: 'short' });
-      const startYear = startDate.getFullYear();
-      const endYear = endDate.getFullYear();
-      
-      let dateRangeText = `${startMonth} ${startYear}`;
-      if (startYear !== endYear) {
-        dateRangeText += ` - ${endMonth} ${endYear}`;
-      } else if (startMonth !== endMonth) {
-        dateRangeText += ` - ${endMonth} ${endYear}`;
-      }
-      
-      dateRangeEl.textContent = dateRangeText;
+      HEATMAP_CONFIG.dateRangeElement.textContent = 
+        `${sixMonthsAgo.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - ${currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
     }
   }
-  
-  // Fetch and render activity data
+
+  /**
+   * Fetch and process activity data
+   */
   async function fetchActivityData() {
     const fetchPaths = [
       'activity-data.json',
@@ -156,53 +68,115 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Fallback to sample data if all fetches fail
-    return generateSampleData();
+    return []; // Return empty array if no data found
   }
-  
-  // Generate sample data if no real data is available
-  function generateSampleData() {
-    const data = [];
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setMonth(startDate.getMonth() - 6);
+
+  /**
+   * Render heatmap with actual activity data
+   * @param {Array} activityData - Genuine activity entries
+   */
+  function renderHeatmap(activityData) {
+    // If no activity, show empty state
+    if (activityData.length === 0) {
+      renderEmptyState();
+      return;
+    }
+
+    // Sort and process data
+    const sortedData = activityData.sort((a, b) => new Date(a.date) - new Date(b.date));
     
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-      const dateStr = d.toISOString().split('T')[0];
-      const random = Math.random();
+    // Clear previous content
+    HEATMAP_CONFIG.container.innerHTML = '';
+    
+    // Create month labels (if data exists)
+    const monthLabels = createMonthLabels(sortedData);
+    const grid = createActivityGrid(sortedData);
+    
+    // Append to container
+    HEATMAP_CONFIG.container.appendChild(monthLabels);
+    HEATMAP_CONFIG.container.appendChild(grid);
+    
+    // Update date range
+    updateDateRange(sortedData);
+  }
+
+  /**
+   * Create month labels for the heatmap
+   * @param {Array} sortedData - Sorted activity data
+   * @returns {HTMLElement} Month labels container
+   */
+  function createMonthLabels(sortedData) {
+    const monthLabels = document.createElement('div');
+    monthLabels.className = 'heatmap-month-labels';
+    
+    const months = new Set();
+    sortedData.forEach(item => {
+      const month = new Date(item.date).toLocaleDateString('en-US', { month: 'short' });
+      months.add(month);
+    });
+    
+    Array.from(months).forEach(month => {
+      const label = document.createElement('div');
+      label.className = 'heatmap-month-label';
+      label.textContent = month;
+      monthLabels.appendChild(label);
+    });
+    
+    return monthLabels;
+  }
+
+  /**
+   * Create activity grid
+   * @param {Array} sortedData - Sorted activity data
+   * @returns {HTMLElement} Activity grid
+   */
+  function createActivityGrid(sortedData) {
+    const grid = document.createElement('div');
+    grid.className = 'heatmap-grid';
+    
+    sortedData.forEach(entry => {
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      cell.setAttribute('data-level', entry.level);
+      cell.setAttribute('data-date', entry.date);
+      cell.title = `${entry.count} points on ${formatDate(entry.date)}`;
       
-      let count = 0;
-      let level = 0;
+      grid.appendChild(cell);
+    });
+    
+    return grid;
+  }
+
+  /**
+   * Update date range display
+   * @param {Array} sortedData - Sorted activity data
+   */
+  function updateDateRange(sortedData) {
+    if (HEATMAP_CONFIG.dateRangeElement) {
+      const startDate = new Date(sortedData[0].date);
+      const endDate = new Date(sortedData[sortedData.length - 1].date);
       
-      if (random > 0.7) {
-        count = Math.floor(Math.random() * 5) + 1;
-        level = 1;
-      } else if (random > 0.85) {
-        count = Math.floor(Math.random() * 10) + 5;
-        level = 2;
-      } else if (random > 0.95) {
-        count = Math.floor(Math.random() * 15) + 15;
-        level = 3;
-      } else if (random > 0.98) {
-        count = Math.floor(Math.random() * 20) + 30;
-        level = 4;
+      const startMonth = startDate.toLocaleDateString('en-US', { month: 'short' });
+      const endMonth = endDate.toLocaleDateString('en-US', { month: 'short' });
+      const startYear = startDate.getFullYear();
+      const endYear = endDate.getFullYear();
+      
+      let dateRangeText = `${startMonth} ${startYear}`;
+      if (startYear !== endYear) {
+        dateRangeText += ` - ${endMonth} ${endYear}`;
+      } else if (startMonth !== endMonth) {
+        dateRangeText += ` - ${endMonth} ${endYear}`;
       }
       
-      data.push({
-        date: dateStr,
-        count,
-        level
-      });
+      HEATMAP_CONFIG.dateRangeElement.textContent = dateRangeText;
     }
-    
-    return data;
   }
-  
+
   // Main execution
   fetchActivityData()
     .then(renderHeatmap)
     .catch(error => {
       console.error('Failed to render heatmap:', error);
-      renderHeatmap(generateSampleData());
+      renderEmptyState();
     });
 });
