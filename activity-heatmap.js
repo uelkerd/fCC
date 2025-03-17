@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add debug log function
   function debugLog(...args) {
     if (HEATMAP_CONFIG.debugMode) {
-      console.log('🔍 [Heatmap Debug]', ...args);
+      
     }
   }
 
