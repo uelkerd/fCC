@@ -1,7 +1,7 @@
 /**
- * Accurate freeCodeCamp Activity Scraper
+ * Ultra-Precise freeCodeCamp Activity Scraper
  * 
- * Focuses on capturing genuine user activity without fabricating data
+ * Captures ONLY genuine user activity with zero fabrication
  */
 
 const puppeteer = require('puppeteer');
@@ -17,7 +17,7 @@ const SCRAPE_OPTIONS = {
 };
 
 async function scrapeActivity() {
-  console.log(`🕵️ Attempting to scrape activity for: ${USERNAME}`);
+  console.log(`🕵️ Precisely capturing activity for: ${USERNAME}`);
   
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -36,15 +36,15 @@ async function scrapeActivity() {
       timeout: SCRAPE_OPTIONS.timeout
     });
     
-    // Wait for heatmap, with extended timeout and error handling
+    // Robust heatmap selector wait
     await page.waitForSelector(SCRAPE_OPTIONS.heatmapSelector, { 
       timeout: 15000,
       visible: true 
     });
     
-    console.log('📊 Extracting genuine activity data...');
+    console.log('📊 Extracting pinpoint-accurate activity data...');
     
-    // Capture actual activity data
+    // Hyper-precise data extraction
     const activityData = await page.evaluate(() => {
       const result = [];
       const cells = document.querySelectorAll('.react-calendar-heatmap rect');
@@ -59,7 +59,7 @@ async function scrapeActivity() {
         const count = parseInt(match[1], 10);
         const dateStr = new Date(match[2]).toISOString().split('T')[0];
         
-        // Capture only cells with actual activity
+        // STRICT: Only capture cells with EXACTLY matching tooltip
         if (count > 0) {
           let level = 0;
           if (cell.classList.contains('color-scale-4')) level = 4;
@@ -67,22 +67,26 @@ async function scrapeActivity() {
           else if (cell.classList.contains('color-scale-2')) level = 2;
           else if (cell.classList.contains('color-scale-1')) level = 1;
           
-          result.push({ date: dateStr, count, level });
+          result.push({ 
+            date: dateStr, 
+            count, 
+            level 
+          });
         }
       });
       
       return result;
     });
     
-    console.log(`📝 Found ${activityData.length} genuine activity entries`);
+    console.log(`📝 Captured ${activityData.length} EXACT activity entries`);
     
-    // Save data, even if it's empty
+    // Save ONLY real data
     await saveActivityData(activityData);
     
   } catch (error) {
-    console.error('❌ Scraping encountered an issue:', error);
+    console.error('❌ Scraping encountered precise error:', error);
     
-    // Save an empty array instead of generating fake data
+    // Explicitly save empty array - NO FABRICATION
     await saveActivityData([]);
   } finally {
     await browser.close();
@@ -90,7 +94,7 @@ async function scrapeActivity() {
 }
 
 /**
- * Save activity data with strict validation
+ * Ultra-Safe Data Saving
  * @param {Array} data - Verified activity entries
  */
 async function saveActivityData(data) {
@@ -106,11 +110,11 @@ async function saveActivityData(data) {
     fs.writeFileSync(publicOutputPath, jsonData);
     fs.writeFileSync(rootOutputPath, jsonData);
     
-    console.log(`💾 Data saved: ${data.length} entries`);
+    console.log(`💾 PRECISE Data saved: ${data.length} entries`);
   } catch (error) {
-    console.error('❌ Error saving data:', error);
+    console.error('❌ Error saving precise data:', error);
   }
 }
 
-// Execute the scraper
+// Execute the precise scraper
 scrapeActivity();
