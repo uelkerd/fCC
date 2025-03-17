@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Function to render the heatmap
   function renderHeatmap(activityData) {
+    // Remove any existing content
+    heatmapContainer.innerHTML = '';
+    
     // Get date range for the heatmap
     const dates = activityData.map(item => new Date(item.date));
     const startDate = new Date(Math.min(...dates));
@@ -85,10 +88,26 @@ document.addEventListener('DOMContentLoaded', function() {
       if (cell) {
         const activity = activityMap[dateStr] || { count: 0, level: 0 };
         
+        // Create tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'heatmap-tooltip';
+        tooltip.textContent = `${activity.count} points on ${formatDate(dateStr)}`;
+        
         // Set data attributes for styling and tooltips
         cell.setAttribute('data-level', activity.level);
         cell.setAttribute('data-date', dateStr);
-        cell.setAttribute('title', `${activity.count} points on ${formatDate(dateStr)}`);
+        cell.title = `${activity.count} points on ${formatDate(dateStr)}`;
+        
+        // Add hover effect
+        cell.addEventListener('mouseenter', () => {
+          cell.appendChild(tooltip);
+        });
+        
+        cell.addEventListener('mouseleave', () => {
+          if (tooltip.parentElement) {
+            cell.removeChild(tooltip);
+          }
+        });
       }
       
       currentDay.setDate(currentDay.getDate() + 1);
@@ -96,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add everything to the container
-    heatmapContainer.innerHTML = '';
     heatmapContainer.appendChild(monthLabels);
     heatmapContainer.appendChild(grid);
     
@@ -119,14 +137,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Function to generate sample data if needed
+  // Fetch and render activity data
+  async function fetchActivityData() {
+    const fetchPaths = [
+      'activity-data.json',
+      'public/activity-data.json'
+    ];
+    
+    for (const path of fetchPaths) {
+      try {
+        const response = await fetch(path);
+        if (response.ok) {
+          const data = await response.json();
+          return data;
+        }
+      } catch (error) {
+        console.warn(`Failed to fetch from ${path}:`, error);
+      }
+    }
+    
+    // Fallback to sample data if all fetches fail
+    return generateSampleData();
+  }
+  
+  // Generate sample data if no real data is available
   function generateSampleData() {
     const data = [];
     const endDate = new Date();
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - 6);
     
-    // Fill in all dates in the range
     for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
       const random = Math.random();
@@ -134,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
       let count = 0;
       let level = 0;
       
-      // Generate some random activity
       if (random > 0.7) {
         count = Math.floor(Math.random() * 5) + 1;
         level = 1;
@@ -156,61 +195,14 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
     
-    // Add recent activity
-    const recent = new Date();
-    for (let i = 0; i < 4; i++) {
-      const d = new Date(recent);
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
-      
-      const index = data.findIndex(item => item.date === dateStr);
-      if (index !== -1) {
-        data[index].count = Math.floor(Math.random() * 50) + 50;
-        data[index].level = 4;
-      }
-    }
-    
     return data;
   }
   
-  // Try to fetch activity data
-  fetch('activity-data.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Activity data not found');
-      }
-      return response.json();
-    })
-    .then(data => {
-      // Save to localStorage for caching
-      localStorage.setItem('fccActivityData', JSON.stringify(data));
-      localStorage.setItem('fccActivityLastUpdated', new Date().toISOString());
-      
-      // Render the heatmap
-      renderHeatmap(data);
-    })
+  // Main execution
+  fetchActivityData()
+    .then(renderHeatmap)
     .catch(error => {
-      console.warn('Error loading activity data:', error);
-      
-      // Try to use cached data
-      const cachedData = localStorage.getItem('fccActivityData');
-      const lastUpdated = localStorage.getItem('fccActivityLastUpdated');
-      
-      if (cachedData && lastUpdated) {
-        const now = new Date();
-        const updated = new Date(lastUpdated);
-        
-        // Use cached data if it's less than 24 hours old
-        if (now - updated < 24 * 60 * 60 * 1000) {
-          console.log('Using cached activity data');
-          renderHeatmap(JSON.parse(cachedData));
-          return;
-        }
-      }
-      
-      // Generate and use sample data as fallback
-      console.log('Generating sample activity data');
-      const sampleData = generateSampleData();
-      renderHeatmap(sampleData);
+      console.error('Failed to render heatmap:', error);
+      renderHeatmap(generateSampleData());
     });
 });
