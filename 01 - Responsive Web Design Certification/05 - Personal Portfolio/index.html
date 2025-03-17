@@ -1,62 +1,265 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
+    <title>My <img src='https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg' alt='freeCodeCamp'> Journey</title>
+    <!-- Add the JavaScript file first so it removes no-js class early -->
+    <script src="index.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar (meets test requirements) -->
     <nav id="navbar">
         <ul>
-            <li><a href="#welcome-section">Welcome</a></li>
+            <li><a href="#welcome-section">Home</a></li>
             <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#certifications">Certifications</a></li>
         </ul>
     </nav>
 
-    <!-- Welcome Section -->
+    <!-- Welcome Section (meets test requirements) -->
     <section id="welcome-section">
-        <h1>Hi, I'm a Web Developer</h1>
-        <p>Front-end developer with a passion for creating responsive web applications</p>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects">
-        <h2>These are some of my projects</h2>
-        <div class="projects-grid">
-            <div class="project-tile">
-                <a href="https://example.com/project1">
-                    <img src="https://via.placeholder.com/300" alt="Project 1">
-                    <p>Project 1</p>
-                </a>
-            </div>
-            <div class="project-tile">
-                <a href="https://example.com/project2">
-                    <img src="https://via.placeholder.com/300" alt="Project 2">
-                    <p>Project 2</p>
-                </a>
-            </div>
-            <div class="project-tile">
-                <a href="https://example.com/project3">
-                    <img src="https://via.placeholder.com/300" alt="Project 3">
-                    <p>Project 3</p>
-                </a>
-            </div>
+        <div class="container">
+            <h1>Hello</h1>
+            <p>Learning and growing through freeCodeCamp</p>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <h2>Let's work together</h2>
-        <div class="contact-links">
-            <a id="profile-link" href="https://github.com/username" target="_blank">GitHub</a>
+    <header>
+        <div class="container">
+            <h1><a href='https://www.freecodecamp.org'><img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="200"></a> <span class="portfolio-text">Portfolio</span></h1>
+            <p class="subtitle">A showcase of my coding journey through freeCodeCamp certifications</p>
         </div>
-    </section>
+    </header>
+
+    <main class="container">
+        <section class="intro">
+            <p>This portfolio showcases the projects I've built while completing the freeCodeCamp curriculum. <br>Each certification represents a milestone in my web development skills.</p>
+        </section>
+        
+        <!-- fCC activity heatmap -->
+        <section class="activity-card">
+            <h2>My fCC Activity</h2>
+            <div id="activity-heatmap" class="activity-heatmap-container">
+                <!-- Heatmap will be rendered here -->
+                <div class="loading-message">Loading activity data...</div>
+            </div>
+            <div class="activity-date-range">Last 6 Months of Activity</div>
+        </section>
+        
+        <!-- Projects Section (updated to meet test requirements) -->
+        <section id="projects">
+            <h2>My Projects</h2>
+            <div class="projects-container">
+                <!-- Responsive Web Design Projects -->
+                <a href="01 - Responsive Web Design Certification/01 - Survey Form/" class="project-tile" target="_blank">
+                    <span class="project-name">Survey Form</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/01-preview.png" alt="Survey Form preview">
+                    </div>
+                </a>
+                <a href="01 - Responsive Web Design Certification/02 - Tribute Page/" class="project-tile" target="_blank">
+                    <span class="project-name">Tribute Page</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/02-preview.png" alt="Tribute Page preview">
+                    </div>
+                </a>
+                <a href="01 - Responsive Web Design Certification/03 - Technical Documentation Page/" class="project-tile" target="_blank">
+                    <span class="project-name">Technical Documentation</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/03-preview.png" alt="Technical Documentation preview">
+                    </div>
+                </a>
+                <a href="01 - Responsive Web Design Certification/04 - Product Landing Page/" class="project-tile" target="_blank">
+                    <span class="project-name">Product Landing Page</span>
+                    <div class="project-preview">
+                        <img src="01 - Responsive Web Design Certification/04-preview.png" alt="Product Landing Page preview">
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section id="certifications" class="certifications">
+            <h2>Certifications & Projects</h2>
+            
+            <!-- Card 1: Initially expanded -->
+            <div id="cert-01" class="cert-card expanded">
+                <h3 class="cert-title">
+                    <a href="#cert-01" class="title-link">01 - Responsive Web Design</a>
+                </h3>
+                <div class="cert-content">
+                    <div class="projects">
+                        <!-- New certification thumbnail -->
+                        <a href="https://www.freecodecamp.org/certification/uelkerd/responsive-web-design" class="project" target="_blank">
+                            <span class="project-name">Certification</span>
+                            <div class="project-preview">
+                                <img src="01 - Responsive Web Design Certification/cert.png" alt="Responsive Web Design Certification">
+                            </div>
+                        </a>
+                        <a href="01 - Responsive Web Design Certification/01 - Survey Form/" class="project">
+                            <span class="project-name">Survey Form</span>
+                            <div class="project-preview">
+                                <img src="01 - Responsive Web Design Certification/01-preview.png" alt="Survey Form preview">
+                            </div>
+                        </a>
+                        <a href="01 - Responsive Web Design Certification/02 - Tribute Page/" class="project">
+                            <span class="project-name">Tribute Page</span>
+                            <div class="project-preview">
+                                <img src="01 - Responsive Web Design Certification/02-preview.png" alt="Tribute Page preview">
+                            </div>
+                        </a>
+                        <a href="01 - Responsive Web Design Certification/03 - Technical Documentation Page/" class="project">
+                            <span class="project-name">Technical Documentation</span>
+                            <div class="project-preview">
+                                <img src="01 - Responsive Web Design Certification/03-preview.png" alt="Technical Documentation preview">
+                            </div>
+                        </a>
+                        <a href="01 - Responsive Web Design Certification/04 - Product Landing Page/" class="project">
+                            <span class="project-name">Product Landing Page</span>
+                            <div class="project-preview">
+                                <img src="01 - Responsive Web Design Certification/04-preview.png" alt="Product Landing Page preview">
+                            </div>
+                        </a>
+                        <a href="01 - Responsive Web Design Certification/05 - Personal Portfolio/" class="project">
+                            <span class="project-name">Personal Portfolio</span>
+                            <div class="project-preview">
+                                <span>No preview available</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Initially collapsed -->
+            <div id="cert-02" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-02" class="title-link">02 - JavaScript Algorithms and Data Structures</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div id="cert-03" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-03" class="title-link">03 - Front End Development Libraries</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div id="cert-04" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-04" class="title-link">04 - Data Visualization</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div id="cert-05" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-05" class="title-link">05 - Relational Database</a>
+                </h3>
+                <div class="cert-content">
+                    <div class="projects">
+                        <a href="05 - Relational Database Certification/universe.sql" class="project">
+                            <span class="project-name">Universe Database</span>
+                            <div class="project-preview">
+                                <span>SQL File</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div id="cert-06" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-06" class="title-link">06 - Back End Development and APIs</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div id="cert-07" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-07" class="title-link">07 - Quality Assurance</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 8 -->
+            <div id="cert-08" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-08" class="title-link">08 - Scientific Computing with Python</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 9 -->
+            <div id="cert-09" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-09" class="title-link">09 - Data Analysis with Python</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 10 -->
+            <div id="cert-10" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-10" class="title-link">10 - Information Security</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 11 -->
+            <div id="cert-11" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-11" class="title-link">11 - Machine Learning with Python</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+
+            <!-- Card 12 -->
+            <div id="cert-12" class="cert-card collapsed">
+                <h3 class="cert-title">
+                    <a href="#cert-12" class="title-link">12 - College Algebra with Python</a>
+                </h3>
+                <div class="cert-content">
+                    <p class="coming-soon">Projects coming soon...</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        <p>© 2025 My Portfolio. All rights reserved.</p>
+        <div class="container">
+            <p>&copy; 2025 - Built while learning with <a href="https://www.freecodecamp.org" target="_blank">freeCodeCamp</a></p>
+            <p>Hosted on <a href="https://github.com/uelkerd/fCC" target="_blank">GitHub Pages</a></p>
+            <a href="https://github.com/uelkerd" id="profile-link" target="_blank">My GitHub Profile</a>
+        </div>
     </footer>
+    <script src="activity-heatmap.js"></script>
 </body>
 </html>
