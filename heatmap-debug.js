@@ -1,218 +1,117 @@
 /**
- * Heatmap Diagnostic Tool
- * Add this script to debug activity data issues
+ * Enhanced debug script for activity heatmap
+ * Add this to your page to get more detailed diagnostics
  */
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🔧 Heatmap Diagnostic Tool loaded');
+  console.log('🔍 Heatmap Debug: Initializing diagnostics');
   
-  // Create diagnostic button
-  const debugButton = document.createElement('button');
-  debugButton.textContent = 'Diagnose Heatmap';
-  debugButton.style.position = 'fixed';
-  debugButton.style.bottom = '10px';
-  debugButton.style.right = '10px';
-  debugButton.style.zIndex = '9999';
-  debugButton.style.padding = '8px 12px';
-  debugButton.style.backgroundColor = '#0a0a23';
-  debugButton.style.color = 'white';
-  debugButton.style.border = '1px solid #f5f6f7';
-  debugButton.style.borderRadius = '4px';
-  debugButton.style.cursor = 'pointer';
+  // Create debug panel
+  const debugPanel = document.createElement('div');
+  debugPanel.classList.add('debug-panel');
+  debugPanel.style.position = 'fixed';
+  debugPanel.style.bottom = '10px';
+  debugPanel.style.right = '10px';
+  debugPanel.style.backgroundColor = 'rgba(0,0,0,0.8)';
+  debugPanel.style.color = 'white';
+  debugPanel.style.padding = '10px';
+  debugPanel.style.borderRadius = '5px';
+  debugPanel.style.maxWidth = '400px';
+  debugPanel.style.maxHeight = '80vh';
+  debugPanel.style.overflow = 'auto';
+  debugPanel.style.zIndex = '9999';
+  debugPanel.style.fontSize = '12px';
+  debugPanel.style.fontFamily = 'monospace';
   
-  document.body.appendChild(debugButton);
+  // Add header with close button
+  debugPanel.innerHTML = `
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+      <strong>Heatmap Diagnostics</strong>
+      <button id="close-debug" style="background: none; border: none; color: white; cursor: pointer;">Close</button>
+    </div>
+  `;
   
-  debugButton.addEventListener('click', async function() {
-    // Create or update diagnostic panel
-    let panel = document.getElementById('heatmap-diagnostic-panel');
-    
-    if (!panel) {
-      panel = document.createElement('div');
-      panel.id = 'heatmap-diagnostic-panel';
-      panel.style.position = 'fixed';
-      panel.style.top = '20px';
-      panel.style.right = '20px';
-      panel.style.width = '400px';
-      panel.style.maxHeight = '80vh';
-      panel.style.overflowY = 'auto';
-      panel.style.backgroundColor = '#0a0a23';
-      panel.style.color = '#f5f6f7';
-      panel.style.padding = '15px';
-      panel.style.borderRadius = '8px';
-      panel.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
-      panel.style.zIndex = '10000';
-      panel.style.fontFamily = 'monospace';
-      panel.style.fontSize = '14px';
-      
-      const closeButton = document.createElement('button');
-      closeButton.textContent = 'Close';
-      closeButton.style.position = 'absolute';
-      closeButton.style.top = '5px';
-      closeButton.style.right = '5px';
-      closeButton.style.padding = '4px 8px';
-      closeButton.style.backgroundColor = '#444';
-      closeButton.style.color = 'white';
-      closeButton.style.border = 'none';
-      closeButton.style.borderRadius = '4px';
-      closeButton.style.cursor = 'pointer';
-      
-      closeButton.addEventListener('click', function() {
-        panel.remove();
-      });
-      
-      panel.appendChild(closeButton);
-      document.body.appendChild(panel);
-    }
-    
-    // Clear previous content
-    panel.innerHTML = '<h3 style="margin-top:0">Heatmap Diagnostics</h3>';
-    
-    const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '5px';
-    closeButton.style.right = '5px';
-    closeButton.style.padding = '4px 8px';
-    closeButton.style.backgroundColor = '#444';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.borderRadius = '4px';
-    closeButton.style.cursor = 'pointer';
-    
-    closeButton.addEventListener('click', function() {
-      panel.remove();
-    });
-    
-    panel.appendChild(closeButton);
-    
-    // Check heatmap container
-    const heatmapContainer = document.getElementById('activity-heatmap');
-    addDiagnosticItem(panel, 'Heatmap Container', heatmapContainer ? 'Found' : 'Missing', heatmapContainer ? 'green' : 'red');
-    
-    // Try to fetch activity data from multiple sources
-    const paths = [
-      'activity-data.json',
-      '/activity-data.json',
-      './activity-data.json',
-      'public/activity-data.json',
-      '/public/activity-data.json',
-      './public/activity-data.json'
-    ];
-    
-    addDiagnosticItem(panel, 'Checking data files...', 'In progress', 'orange');
-    
-    for (const path of paths) {
-      try {
-        const response = await fetch(path);
-        
-        if (response.ok) {
-          try {
-            const text = await response.text();
-            const data = JSON.parse(text);
-            
-            addDiagnosticItem(
-              panel, 
-              `Data from ${path}`, 
-              `Success: ${Array.isArray(data) ? data.length : 'Not an array'} entries`, 
-              'green'
-            );
-            
-            if (Array.isArray(data) && data.length > 0) {
-              // Show sample data
-              const sampleData = data.slice(0, 3);
-              const sampleItem = document.createElement('pre');
-              sampleItem.style.background = '#111';
-              sampleItem.style.padding = '8px';
-              sampleItem.style.borderRadius = '4px';
-              sampleItem.style.fontSize = '12px';
-              sampleItem.style.overflow = 'auto';
-              sampleItem.textContent = JSON.stringify(sampleData, null, 2);
-              panel.appendChild(sampleItem);
-            }
-          } catch (e) {
-            addDiagnosticItem(panel, `Parse error ${path}`, e.message, 'red');
-          }
-        } else {
-          addDiagnosticItem(panel, `Fetch ${path}`, `Failed: ${response.status}`, 'red');
-        }
-      } catch (e) {
-        addDiagnosticItem(panel, `Request ${path}`, `Error: ${e.message}`, 'red');
-      }
-    }
-    
-    // Create emergency data button
-    const createButton = document.createElement('button');
-    createButton.textContent = 'Create Emergency Data';
-    createButton.style.padding = '8px 12px';
-    createButton.style.backgroundColor = '#0a0a23';
-    createButton.style.color = 'white';
-    createButton.style.border = '1px solid #f5f6f7';
-    createButton.style.borderRadius = '4px';
-    createButton.style.marginTop = '15px';
-    createButton.style.cursor = 'pointer';
-    createButton.style.width = '100%';
-    
-    createButton.addEventListener('click', function() {
-      // Create emergency activity data with the last 7 days
-      const emergencyData = [];
-      
-      for (let i = 0; i < 7; i++) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        
-        emergencyData.push({
-          date: date.toISOString().split('T')[0],
-          count: Math.floor(Math.random() * 10) + 1,
-          level: Math.floor(Math.random() * 4) + 1
-        });
-      }
-      
-      // Create a download link for the data
-      const dataStr = JSON.stringify(emergencyData, null, 2);
-      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-      
-      const downloadLink = document.createElement('a');
-      downloadLink.setAttribute('href', dataUri);
-      downloadLink.setAttribute('download', 'activity-data.json');
-      downloadLink.style.display = 'none';
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      
-      addDiagnosticItem(panel, 'Emergency Data', 'Created and downloaded', 'green');
-    });
-    
-    panel.appendChild(createButton);
-    
-    // Reload button
-    const reloadButton = document.createElement('button');
-    reloadButton.textContent = 'Reload Page';
-    reloadButton.style.padding = '8px 12px';
-    reloadButton.style.backgroundColor = '#0a0a23';
-    reloadButton.style.color = 'white';
-    reloadButton.style.border = '1px solid #f5f6f7';
-    reloadButton.style.borderRadius = '4px';
-    reloadButton.style.marginTop = '10px';
-    reloadButton.style.cursor = 'pointer';
-    reloadButton.style.width = '100%';
-    
-    reloadButton.addEventListener('click', function() {
-      window.location.reload();
-    });
-    
-    panel.appendChild(reloadButton);
+  document.body.appendChild(debugPanel);
+  
+  // Handle close button
+  document.getElementById('close-debug').addEventListener('click', function() {
+    debugPanel.style.display = 'none';
   });
   
-  function addDiagnosticItem(panel, label, status, color) {
-    const item = document.createElement('div');
-    item.style.margin = '5px 0';
-    item.style.padding = '5px';
-    item.style.borderLeft = `3px solid ${color}`;
-    
-    item.innerHTML = `
-      <div style="font-weight:bold">${label}</div>
-      <div style="color:${color}">${status}</div>
+  // Add section function
+  function addSection(title, status = 'In progress', details = '') {
+    const section = document.createElement('div');
+    section.style.marginBottom = '10px';
+    section.innerHTML = `
+      <div><strong>${title}</strong></div>
+      <div style="color: ${status === 'Success' ? '#4CAF50' : status === 'Failed' ? '#F44336' : '#2196F3'}">
+        ${status}${details ? ': ' + details : ''}
+      </div>
+      <div class="details" style="margin-top: 5px;"></div>
     `;
-    
-    panel.appendChild(item);
+    debugPanel.appendChild(section);
+    return section.querySelector('.details');
   }
+  
+  // Check heatmap container
+  const heatmapContainer = document.getElementById('activity-heatmap');
+  addSection('**Heatmap Container**', heatmapContainer ? 'Found' : 'Not found');
+  
+  // Start data check
+  const dataCheckSection = addSection('**Checking data files...**');
+  
+  // Function to test file access
+  async function checkFile(path, sectionTitle) {
+    const section = addSection(sectionTitle);
+    
+    try {
+      const response = await fetch(path);
+      if (response.ok) {
+        const text = await response.text();
+        try {
+          const data = JSON.parse(text);
+          section.innerHTML = `Success: ${data.length} entries<br><br><pre style="background: #333; padding: 5px; overflow: auto; max-height: 100px;">${JSON.stringify(data.slice(0, 3), null, 2)}</pre>`;
+        } catch (e) {
+          section.textContent = `Failed to parse JSON: ${e.message}`;
+        }
+      } else {
+        section.textContent = `Failed: ${response.status}`;
+      }
+    } catch (e) {
+      section.textContent = `Error: ${e.message}`;
+    }
+  }
+  
+  // Get base URL info
+  const baseUrlSection = addSection('**Base URL Info**');
+  const pathname = window.location.pathname;
+  const hostname = window.location.hostname;
+  const fullUrl = window.location.href;
+  baseUrlSection.innerHTML = `
+    Pathname: ${pathname}<br>
+    Hostname: ${hostname}<br>
+    Full URL: ${fullUrl}<br>
+  `;
+  
+  // Run all checks
+  checkFile('activity-data.json', '**Data from activity-data.json**');
+  checkFile('/activity-data.json', '**Fetch /activity-data.json**');
+  checkFile('./activity-data.json', '**Data from ./activity-data.json**');
+  checkFile('public/activity-data.json', '**Data from public/activity-data.json**');
+  checkFile('/public/activity-data.json', '**Fetch /public/activity-data.json**');
+  checkFile('./public/activity-data.json', '**Data from ./public/activity-data.json**');
+  checkFile('../activity-data.json', '**Data from ../activity-data.json**');
+  checkFile('docs/activity-data.json', '**Data from docs/activity-data.json**');
+  
+  // If this is GitHub Pages, try repo-specific paths
+  if (hostname.includes('github.io')) {
+    const repoName = pathname.split('/')[1]; // Assumes pathname format /repoName/...
+    if (repoName) {
+      checkFile(`/${repoName}/activity-data.json`, `**Fetch /${repoName}/activity-data.json**`);
+      checkFile(`/${repoName}/public/activity-data.json`, `**Fetch /${repoName}/public/activity-data.json**`);
+      checkFile(`/${repoName}/docs/activity-data.json`, `**Fetch /${repoName}/docs/activity-data.json**`);
+    }
+  }
+  
+  // Update status
+  dataCheckSection.textContent = 'Complete';
 });
