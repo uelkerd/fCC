@@ -1,4 +1,5 @@
-# ![freeCodeCamp](https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg) Projects
+# <img src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp" width="200"> Projects
+
 
 This repository contains my solutions and projects completed as part of the [freeCodeCamp](https://www.freecodecamp.org/) curriculum.
 
