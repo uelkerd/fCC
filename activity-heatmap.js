@@ -141,12 +141,9 @@ document.addEventListener('DOMContentLoaded', function() {
     for (const path of fetchPaths) {
       try {
         debugLog(`Trying path: ${path}`);
-        debugLog(`Trying path: ${path}`);
-    // Add timestamp to prevent caching
-          const timestamp = new Date().getTime();
-          const response = await fetch(`${path}?_=${timestamp}`);
-          
-          if (response.ok) {
+        // Add timestamp to prevent caching
+        const timestamp = new Date().getTime();
+        const response = await fetch(`${path}?_=${timestamp}`);
         
         if (response.ok) {
           const rawText = await response.text();
@@ -187,44 +184,64 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   /**
-   * Render heatmap with activity data
-   * @param {Array} activityData - Activity entries
+   * Create activity grid from data with improved error handling and styling
+   * @param {Array} sortedData - Chronologically sorted data
+   * @returns {HTMLElement} Activity grid
    */
-  function renderHeatmap(activityData) {
-    debugLog(`Rendering heatmap with ${activityData.length} entries`);
-    
-    if (!HEATMAP_CONFIG.container) {
-      console.error('❌ Heatmap container element not found!');
-      return;
+  function createActivityGrid(sortedData) {
+    try {
+      debugLog(`Creating grid with ${sortedData.length} cells`);
+      
+      const grid = document.createElement('div');
+      grid.className = 'heatmap-grid';
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(12px, 1fr))';
+      grid.style.gap = '2px';
+      grid.style.width = '100%';
+      
+      let cellsCreated = 0;
+      sortedData.forEach(entry => {
+        try {
+          const cell = document.createElement('div');
+          cell.className = 'heatmap-cell';
+          cell.style.width = '12px';
+          cell.style.height = '12px';
+          cell.style.borderRadius = '2px';
+          
+          // Ensure level is within valid range
+          const level = Math.max(0, Math.min(4, entry.level || 0));
+          
+          // Apply color based on level
+          const colors = [
+            '#ebedf0', // Level 0
+            '#9be9a8', // Level 1
+            '#40c463', // Level 2
+            '#30a14e', // Level 3
+            '#216e39'  // Level 4
+          ];
+          cell.style.backgroundColor = colors[level];
+          
+          cell.setAttribute('data-level', level);
+          cell.setAttribute('data-date', entry.date);
+          cell.title = `${entry.count || 0} points on ${formatDate(entry.date)}`;
+          
+          grid.appendChild(cell);
+          cellsCreated++;
+        } catch (error) {
+          debugLog('Cell creation error for entry:', entry, error);
+        }
+      });
+      
+      debugLog(`Successfully created ${cellsCreated} cells out of ${sortedData.length}`);
+      return grid;
+    } catch (error) {
+      console.error('❌ Fatal error creating grid:', error);
+      // Create a very basic fallback grid
+      const fallbackGrid = document.createElement('div');
+      fallbackGrid.textContent = 'Error rendering activity. See console for details.';
+      fallbackGrid.style.color = 'red';
+      return fallbackGrid;
     }
-    
-    // Ensure we have data
-    if (!activityData || !Array.isArray(activityData) || activityData.length === 0) {
-      debugLog('No activity data to render, showing empty state');
-      renderEmptyState();
-      return;
-    }
-
-    // Sort data chronologically
-    const sortedData = activityData.sort((a, b) => 
-      new Date(a.date) - new Date(b.date)
-    );
-
-    // Clear previous content
-    HEATMAP_CONFIG.container.innerHTML = '';
-    
-    // Create month labels
-    const monthLabels = createMonthLabels(sortedData);
-    HEATMAP_CONFIG.container.appendChild(monthLabels);
-    
-    // Create activity grid
-    const grid = createActivityGrid(sortedData);
-    HEATMAP_CONFIG.container.appendChild(grid);
-    
-    // Update date range display
-    updateDateRange(sortedData);
-    
-    debugLog('Heatmap rendering complete');
   }
 
   /**
@@ -235,6 +252,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function createMonthLabels(sortedData) {
     const monthLabels = document.createElement('div');
     monthLabels.className = 'heatmap-month-labels';
+    monthLabels.style.display = 'flex';
+    monthLabels.style.justifyContent = 'space-between';
+    monthLabels.style.marginBottom = '5px';
     
     // Get all unique months in the data
     const monthSet = new Set(sortedData.map(entry => {
@@ -252,39 +272,12 @@ document.addEventListener('DOMContentLoaded', function() {
       const label = document.createElement('div');
       label.className = 'heatmap-month-label';
       label.textContent = month;
+      label.style.fontSize = '12px';
+      label.style.color = '#586069';
       monthLabels.appendChild(label);
     });
     
     return monthLabels;
-  }
-
-  /**
-   * Create activity grid from data
-   * @param {Array} sortedData - Chronologically sorted data
-   * @returns {HTMLElement} Activity grid
-   */
-  function createActivityGrid(sortedData) {
-    const grid = document.createElement('div');
-    grid.className = 'heatmap-grid';
-    
-    sortedData.forEach(entry => {
-      try {
-        const cell = document.createElement('div');
-        cell.className = 'heatmap-cell';
-        
-        // Ensure level is within valid range
-        const level = Math.max(0, Math.min(4, entry.level || 0));
-        cell.setAttribute('data-level', level);
-        cell.setAttribute('data-date', entry.date);
-        cell.title = `${entry.count || 0} points on ${formatDate(entry.date)}`;
-        
-        grid.appendChild(cell);
-      } catch (error) {
-        debugLog('Cell creation error for entry:', entry, error);
-      }
-    });
-    
-    return grid;
   }
 
   /**
@@ -317,23 +310,111 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Main execution
+  /**
+   * Render heatmap with activity data
+   * @param {Array} activityData - Activity entries
+   */
+  function renderHeatmap(activityData) {
+    debugLog(`Rendering heatmap with ${activityData.length} entries`);
+    
+    if (!HEATMAP_CONFIG.container) {
+      console.error('❌ Heatmap container element not found!');
+      return;
+    }
+    
+    // Remove loading message first
+    const loadingMessage = HEATMAP_CONFIG.container.querySelector('.loading-message');
+    if (loadingMessage) loadingMessage.remove();
+    
+    // Ensure we have data
+    if (!activityData || !Array.isArray(activityData) || activityData.length === 0) {
+      debugLog('No activity data to render, showing empty state');
+      renderEmptyState();
+      return;
+    }
+
+    try {
+      // Clear previous content
+      HEATMAP_CONFIG.container.innerHTML = '';
+      
+      // Sort data chronologically
+      const sortedData = activityData.sort((a, b) => 
+        new Date(a.date) - new Date(b.date)
+      );
+      
+      // Create month labels
+      const monthLabels = createMonthLabels(sortedData);
+      HEATMAP_CONFIG.container.appendChild(monthLabels);
+      
+      // Create activity grid with explicit visibility
+      const grid = createActivityGrid(sortedData);
+      grid.style.display = 'grid'; // Force grid display
+      grid.style.visibility = 'visible'; // Ensure visibility
+      HEATMAP_CONFIG.container.appendChild(grid);
+      
+      // Update date range display
+      updateDateRange(sortedData);
+      
+      // Check if we actually rendered anything
+      setTimeout(() => {
+        const cells = HEATMAP_CONFIG.container.querySelectorAll('.heatmap-cell');
+        debugLog(`After rendering, found ${cells.length} visible cells`);
+        
+        if (cells.length === 0) {
+          // Emergency fallback if no cells were rendered
+          HEATMAP_CONFIG.container.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+              <p>Activity data loaded (${activityData.length} entries) but rendering failed.</p>
+              <p>Try refreshing the page or check console for errors.</p>
+              <div style="margin-top: 10px; background: #f8f9fa; padding: 10px; border-radius: 4px; text-align: left;">
+                <strong>Recent activity:</strong><br>
+                ${activityData.filter(entry => entry.count > 0).slice(-5).map(entry => 
+                  `${entry.date}: ${entry.count} points`
+                ).join('<br>')}
+              </div>
+            </div>
+          `;
+        }
+      }, 100);
+      
+      debugLog('Heatmap rendering complete');
+    } catch (error) {
+      console.error('❌ Error during heatmap rendering:', error);
+      // Emergency fallback
+      HEATMAP_CONFIG.container.innerHTML = `
+        <div style="color: red; padding: 20px; text-align: center;">
+          Error rendering activity heatmap.<br>
+          ${error.message}
+        </div>
+      `;
+    }
+  }
+
+  // Main execution with improved loading handling
   debugLog('Heatmap initialization started');
   
-  // Remove loading message if present
-  const loadingMessage = document.querySelector('.loading-message');
-  if (loadingMessage) loadingMessage.textContent = 'Looking for activity data...';
+  // Clear existing content and add loading message
+  if (HEATMAP_CONFIG.container) {
+    HEATMAP_CONFIG.container.innerHTML = '<div class="loading-message" style="text-align: center; padding: 20px;">Loading activity data...</div>';
+  }
   
   fetchActivityData()
     .then(data => {
       debugLog(`Fetched ${data.length} activity entries`);
-      renderHeatmap(data);
+      // Force a small delay to ensure DOM is ready
+      setTimeout(() => {
+        renderHeatmap(data);
+      }, 50);
     })
     .catch(error => {
       console.error('❌ Heatmap rendering failed:', error);
-      renderEmptyState();
-    })
-    .finally(() => {
-      if (loadingMessage) loadingMessage.remove();
+      if (HEATMAP_CONFIG.container) {
+        HEATMAP_CONFIG.container.innerHTML = `
+          <div style="color: red; padding: 20px; text-align: center;">
+            Failed to load activity data.<br>
+            ${error.message}
+          </div>
+        `;
+      }
     });
 });
