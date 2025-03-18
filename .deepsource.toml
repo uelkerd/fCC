@@ -1,59 +1,108 @@
-# DeepSource configuration file
+# DeepSource comprehensive configuration for freeCodeCamp certification paths
 version = 1
 
 # Files to exclude from analysis
 exclude_patterns = [
-  # Common patterns to exclude
   "**/node_modules/**",
   "**/dist/**", 
   "**/build/**",
   "**/*.min.js",
   "**/*.min.css",
-  # Add any other generated files or libraries you don't want analyzed
+  "**/vendor/**",
+  "**/.ipynb_checkpoints/**"
 ]
 
-# Identify test files (if you add any in the future)
+# Test identification patterns
 test_patterns = [
   "**/test/**",
   "**/*.test.js",
   "**/*.spec.js",
-  "**/*_test.py"
+  "**/*_test.py",
+  "**/tests/**"
 ]
 
-# JavaScript analyzer configuration
+# JavaScript analyzer - covers JS Algorithms, Front End Libraries, Data Viz
 [[analyzers]]
 name = "javascript"
 enabled = true
-# Detect both JavaScript and TypeScript
-dialect = "auto"
-# Look for package.json and other dependency files
+dialect = "auto"  # Detects JS, TypeScript, JSX, etc.
 dependency_file_paths = [
   "package.json",
   "package-lock.json",
   "yarn.lock"
 ]
 
-# Web technologies (HTML/CSS) analyzer
-[[analyzers]]
-name = "web"
-enabled = true
-# All forms of web content will be analyzed
-file_extensions = ["html", "htm", "css", "sass", "scss"]
-
-# Python analyzer (for your Python certification projects)
+# Python analyzer - covers Scientific Computing, Data Analysis, Machine Learning
 [[analyzers]]
 name = "python"
 enabled = true
-# Python version to target
 python_version = "3.x"
-# Look for requirements files
 dependency_file_paths = [
   "requirements.txt",
   "Pipfile",
-  "setup.py"
+  "setup.py",
+  "environment.yml"
 ]
 
-# Optional: you might want to add this in the future
-# [[analyzers]]
-# name = "test-coverage"
-# enabled = false
+# Web technologies - for HTML/CSS portions of certifications
+[[analyzers]]
+name = "web"
+enabled = true
+file_extensions = ["html", "htm", "css", "sass", "scss", "less", "svg"]
+
+# Shell scripts - for Bash scripting in Relational Database cert
+[[analyzers]]
+name = "shell"
+enabled = true
+file_extensions = ["sh", "bash"]
+
+# SQL analyzer - for Relational Database certification
+[[analyzers]]
+name = "sql"
+enabled = true
+file_extensions = ["sql"]
+
+# Ruby - for potential Ruby projects
+[[analyzers]]
+name = "ruby"
+enabled = true
+
+# Docker analyzer - in case you have containerization in your projects
+[[analyzers]]
+name = "docker"
+enabled = true
+
+# Go analyzer - for any Go programming
+[[analyzers]]
+name = "go"
+enabled = true
+
+# Security analysis - particularly important for Information Security cert
+[[analyzers]]
+name = "secrets"
+enabled = true
+
+# Node.js security - for Back End Development and APIs
+[[analyzers]]
+name = "nodejs-security"
+enabled = true
+
+# ESLint transformer - for JavaScript code style
+[[transformers]]
+name = "eslint"
+enabled = true
+
+# Prettier transformer - for consistent code formatting
+[[transformers]]
+name = "prettier"
+enabled = true
+
+# Black transformer - for Python code formatting
+[[transformers]]
+name = "black"
+enabled = true
+
+# isort transformer - for organizing Python imports
+[[transformers]]
+name = "isort"
+enabled = true
