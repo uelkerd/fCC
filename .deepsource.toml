@@ -1,4 +1,59 @@
+# DeepSource configuration file
 version = 1
 
+# Files to exclude from analysis
+exclude_patterns = [
+  # Common patterns to exclude
+  "**/node_modules/**",
+  "**/dist/**", 
+  "**/build/**",
+  "**/*.min.js",
+  "**/*.min.css",
+  # Add any other generated files or libraries you don't want analyzed
+]
+
+# Identify test files (if you add any in the future)
+test_patterns = [
+  "**/test/**",
+  "**/*.test.js",
+  "**/*.spec.js",
+  "**/*_test.py"
+]
+
+# JavaScript analyzer configuration
 [[analyzers]]
 name = "javascript"
+enabled = true
+# Detect both JavaScript and TypeScript
+dialect = "auto"
+# Look for package.json and other dependency files
+dependency_file_paths = [
+  "package.json",
+  "package-lock.json",
+  "yarn.lock"
+]
+
+# Web technologies (HTML/CSS) analyzer
+[[analyzers]]
+name = "web"
+enabled = true
+# All forms of web content will be analyzed
+file_extensions = ["html", "htm", "css", "sass", "scss"]
+
+# Python analyzer (for your Python certification projects)
+[[analyzers]]
+name = "python"
+enabled = true
+# Python version to target
+python_version = "3.x"
+# Look for requirements files
+dependency_file_paths = [
+  "requirements.txt",
+  "Pipfile",
+  "setup.py"
+]
+
+# Optional: you might want to add this in the future
+# [[analyzers]]
+# name = "test-coverage"
+# enabled = false
