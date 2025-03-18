@@ -1,0 +1,52 @@
+name: DeepSource Test Coverage
+
+on:
+  # Run on push to main/master branch
+  push:
+    branches: [ main, master ]
+  # Run on pull requests
+  pull_request:
+    branches: [ main, master ]
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    env:
+      DEEPSOURCE_DSN: ${{ secrets.DEEPSOURCE_DSN }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Setup your programming language
+      # Example for Node.js:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      # Install dependencies (customize for your project)
+      - name: Install dependencies
+        run: |
+          npm ci
+          # If you need test coverage tools:
+          npm install --save-dev jest jest-junit
+      
+      # Run tests with coverage (customize command for your project)
+      - name: Run tests with coverage
+        run: npm test -- --coverage --coverageReporters=lcov
+      
+      # Install DeepSource CLI
+      - name: Install DeepSource CLI
+        run: curl https://deepsource.io/cli | sh
+      
+      # Report coverage to DeepSource
+      - name: Report coverage to DeepSource
+        run: |
+          # Make the CLI executable
+          chmod +x ./bin/deepsource
+          
+          # Report the coverage data
+          ./bin/deepsource report --analyzer test-coverage --key javascript --value-file ./coverage/lcov.info
