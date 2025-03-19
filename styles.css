@@ -743,3 +743,91 @@ footer a:hover {
         padding: 40px 0 30px;
     }
 }
+
+/* Animation for the welcome text */
+@keyframes colorZap {
+  0% {
+    color: var(--text-color);
+    text-shadow: 0 0 0 transparent;
+    transform: scale(1);
+  }
+  10% {
+    color: #4d5bce;
+    text-shadow: 0 0 10px rgba(77, 91, 206, 0.5);
+    transform: scale(1.05);
+  }
+  20% {
+    color: var(--text-color);
+    text-shadow: 0 0 0 transparent;
+    transform: scale(1);
+  }
+  40% {
+    color: #6d28d9;
+    text-shadow: 0 0 10px rgba(109, 40, 217, 0.5);
+    transform: scale(1.05);
+  }
+  50% {
+    color: var(--text-color);
+    text-shadow: 0 0 0 transparent;
+    transform: scale(1);
+  }
+  70% {
+    color: #4338ca;
+    text-shadow: 0 0 10px rgba(67, 56, 202, 0.5);
+    transform: scale(1.05);
+  }
+  80% {
+    color: var(--text-color);
+    text-shadow: 0 0 0 transparent;
+    transform: scale(1);
+  }
+  100% {
+    color: var(--text-color);
+    text-shadow: 0 0 0 transparent;
+    transform: scale(1);
+  }
+}
+
+/* Apply the animation to the welcome heading */
+#welcome-section h1 {
+  animation: colorZap 6s infinite;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+}
+
+/* Add a "zap" effect when hovering */
+#welcome-section h1:hover {
+  animation-play-state: paused;
+  color: #4d5bce;
+  text-shadow: 0 0 15px rgba(77, 91, 206, 0.7);
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* Font change animation */
+@keyframes fontChange {
+  0%, 100% {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+  }
+  25% {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  50% {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  75% {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Apply font change animation */
+#welcome-section h1 {
+  animation: colorZap 6s infinite, fontChange 6s infinite;
