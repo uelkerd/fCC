@@ -743,7 +743,6 @@ footer a:hover {
         padding: 40px 0 30px;
     }
 }
-
 /* Animation for the welcome text */
 @keyframes colorZap {
   0% {
@@ -805,29 +804,37 @@ footer a:hover {
   cursor: pointer;
 }
 
-/* Font change animation */
+/* Font change animation with tech-focused fonts */
 @keyframes fontChange {
   0%, 100% {
     font-family: 'Inter', sans-serif;
     font-weight: 700;
+    letter-spacing: 0;
   }
-  25% {
-    font-family: 'Roboto Mono', monospace;
+  20% {
+    font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
   }
-  50% {
-    font-family: 'Playfair Display', serif;
+  40% {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  60% {
+    font-family: 'Fira Code', monospace;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  80% {
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     letter-spacing: 0.01em;
-  }
-  75% {
-    font-family: 'Nunito', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.01em;
   }
 }
 
 /* Apply font change animation */
 #welcome-section h1 {
   animation: colorZap 6s infinite, fontChange 6s infinite;
+}
