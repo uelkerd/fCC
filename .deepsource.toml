@@ -66,11 +66,6 @@ enabled = true
 name = "ruby"
 enabled = true
 
-# Go analyzer
-[[analyzers]]
-name = "go"
-enabled = true
-
 # Transformers - based on commonly supported ones
 [[transformers]]
 name = "black"
