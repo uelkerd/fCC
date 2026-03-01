@@ -17,7 +17,6 @@ The site is built with modern HTML, CSS, and JavaScript and is automatically dep
 
 ---
 
-
 ## About freeCodeCamp
 
 freeCodeCamp is a non-profit organization that consists of an interactive learning web platform, an online community forum, chat rooms, online publications and local organizations that intend to make learning web development accessible to anyone.
@@ -27,6 +26,7 @@ freeCodeCamp is a non-profit organization that consists of an interactive learni
 This repository is organized by certification tracks:
 
 ### Current Certifications
+
 - **01 - Responsive Web Design Certification**
 - **02 - JavaScript Algorithms and Data Structures Certification**
 - **03 - Front End Development Libraries Certification**
@@ -57,20 +57,20 @@ This repository is organized by certification tracks:
 
 ## My Progress
 
-| Certification | Status |
-|---------------|--------|
-| Responsive Web Design | [Finished](https://www.freecodecamp.org/certification/uelkerd/responsive-web-design) |
-| JavaScript Algorithms and Data Structures | Not Started |
-| Front End Development Libraries | Not Started |
-| Data Visualization | Not Started |
-| Relational Database | Not Started |
-| Back End Development and APIs | Not Started |
-| Quality Assurance | Not Started |
-| Scientific Computing with Python | Not Started |
-| Data Analysis with Python | Not Started |
-| Information Security | Not Started |
-| Machine Learning with Python | Not Started |
-| College Algebra with Python | Not Started |
+| Certification                             | Status                                                                               |
+| ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| Responsive Web Design                     | [Finished](https://www.freecodecamp.org/certification/uelkerd/responsive-web-design) |
+| JavaScript Algorithms and Data Structures | Not Started                                                                          |
+| Front End Development Libraries           | Not Started                                                                          |
+| Data Visualization                        | Not Started                                                                          |
+| Relational Database                       | Not Started                                                                          |
+| Back End Development and APIs             | Not Started                                                                          |
+| Quality Assurance                         | Not Started                                                                          |
+| Scientific Computing with Python          | Not Started                                                                          |
+| Data Analysis with Python                 | Not Started                                                                          |
+| Information Security                      | Not Started                                                                          |
+| Machine Learning with Python              | Not Started                                                                          |
+| College Algebra with Python               | Not Started                                                                          |
 
 ## How to Navigate This Repository
 
@@ -82,5 +82,5 @@ Each folder represents a different certification or module from freeCodeCamp. Wi
 - FreeCodeCamp: [uelkerd@fCC](https://www.freecodecamp.org/uelkerd)
 
 ---
-(This repository is continuously updated as I progress through the freeCodeCamp curriculum.)
----
+
+## (This repository is continuously updated as I progress through the freeCodeCamp curriculum.)
